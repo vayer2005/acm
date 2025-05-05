@@ -9,7 +9,6 @@ void solve() {
     ll a; ll b; ll c;
 
     cin >> a >> b >> c;
-    
     c -= abs(a-b);
     ll res = max(a, b);
 
