@@ -47,8 +47,7 @@ void solve() {
             cout << matrix[i][j] << " ";
         }
         cout << endl;
-    }
-    
+    }  
 }
 
 int main() {
