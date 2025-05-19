@@ -146,29 +146,62 @@ int C(int n, int k)
     int p2 = (1 * inversemod(fact[n - k], mod)) % mod;
     return (p1 * p2) % mod;
 }
+
+bool intersect(const string &a, const string &b) {
+    string out;
+    set_intersection(a.begin(), a.end(), b.begin(), b.end(), back_inserter(out));
+    return out.size();
+}
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
+    int n, q;
+    cin >> n >> q;
 
-    double left = min(a, n-a+1);
-    int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
+    vector<string> s(n); 
+    cin >> s;
 
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
+    map<string, vector<int>> m;
+    for (int i = 0; i < n; i++) {
+        m[s[i]].push_back(i);
+    }
 
+    for (auto &it: m) {
+        sort(it.second.begin(), it.second.end());
+    }
 
+    while(q--) {
+        int x, y; cin >> x >> y; x--; y--;
 
+        if (x > y) swap(x,y);
 
-    
+        if (intersect(s[x], s[y])) {
+            cout << y - x << endl;
+            continue;
+        }
 
-}
+        int ans = 1e9;
+        for(auto &[k, v] : m) {
+            if (k == s[x] or k == s[y]) continue;
+            auto it = lower_bound(v.begin(), v.end(), x);
+            if (it != v.end()) ans = min(ans, *it-x);
+            if (it != v.begin()) {
+                it--;
+                ans = min(ans, y-*it);
+            }
+        }
+        if (ans > y-x && ans != 1e9) {
+            ans = 2 * (ans - (y-x)) + y-x;
+        }
+        ans = max(ans, y-x);
+        if (ans==1e9) {
+            ans = -1;
+        }
+        cout << ans << endl;
+
+    }
+
+}  
 
 signed main()
 {

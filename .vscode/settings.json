@@ -54,6 +54,7 @@
         "stack": "cpp",
         "queue": "cpp",
         "list": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "parity-cpp": "cpp"
     }
 }

@@ -146,29 +146,55 @@ int C(int n, int k)
     int p2 = (1 * inversemod(fact[n - k], mod)) % mod;
     return (p1 * p2) % mod;
 }
+
+bool intersect(const string &a, const string &b) {
+    string out;
+    ranges::set_intersection(a, b, back_inserter(out));
+    return out.size();
+}
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
+    int n, m, k;
+    cin >> n >> m >> k;
 
-    double left = min(a, n-a+1);
-    int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
+    vi a(n);
+    cin >> a;
+    vi b(n);
+    for(int i = 0; i < n; i++) {
+        b[i] = a[i];
+    }
 
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
+    map<int,int> nums;
+
+    sort(a.begin(), a.end());
+    int total = 0;
+    for(int i = 0; i < n; i++) {
+        if (total >= k) {
+            break;
+        }
+        int toAdd = min(m, k-total);
+        total += toAdd;
+        nums[a[i]]+=toAdd;
+    }
+
+    total = 0;
+    int cost = 0;
+    for (int i = 0; i < n; i++) {
+        if (nums[b[i]] != 0) {
+            int toRem = min(m, nums[b[i]]);
+            cost += toRem*(b[i] + total);
+            total += toRem;
+            nums[b[i]] -= toRem;
+        }
+    }
+
+    cout << cost << endl;
 
 
 
 
-    
-
-}
+}  
 
 signed main()
 {

@@ -149,24 +149,11 @@ int C(int n, int k)
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
-
-    double left = min(a, n-a+1);
-    int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
-
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
-
-
-
+    string s;
+    cin >> s;
 
     
+
 
 }
 

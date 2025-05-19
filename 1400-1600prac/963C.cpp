@@ -149,24 +149,45 @@ int C(int n, int k)
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
+    int n, k;
+    cin >> n >> k;
+    vi vals(n,0);
+    cin >> vals;
 
-    double left = min(a, n-a+1);
-    int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
+    sort(vals.begin(), vals.end());
 
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
+    vi pref(2*k, 0);
 
-
-
+    for(int i = 0; i < n; i++) {
+        int start = vals[i] % (2*k);
+        int end = (start + k);
+        if (end < 2*k) {
+            pref[start]++;
+            pref[end]--;
+        } else {
+            pref[start]++;
+            pref[0]++;
+            pref[end%(2*k)]--;
+        }
+        
+    }
 
     
+    
+    for(int i = 1; i < 2*k; i++) {
+        pref[i] = pref[i-1] + pref[i];    
+    }
+    
+    int an = vals[n-1];
+    for (int i = an; i < an + k; i++) {
+        
+        if (pref[i%(2*k)] >= n) {
+            cout << i << endl;
+            return;
+        }
+    }
+
+    cout << "-1\n";
 
 }
 

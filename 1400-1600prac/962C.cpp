@@ -149,22 +149,19 @@ int C(int n, int k)
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
-
-    double left = min(a, n-a+1);
+    int n, x;
+    cin >> n >> x;
+    int c;
     int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
-
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
-
-
-
+    for (int a = 1; a <= n; a++) {
+        for (int b = 1; a*b <= n; b++) {
+            int ub = min((n-(a*b))/(a+b), x-a-b);
+            if (ub >= 1) {
+                ans += ub;
+            }
+        }
+    }
+    cout << ans << endl;
 
     
 

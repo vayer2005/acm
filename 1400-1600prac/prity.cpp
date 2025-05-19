@@ -149,23 +149,41 @@ int C(int n, int k)
  
 void solve()
 {
-    double n, m, a, b;
-    cin >> n >> m >> a >> b;
+    int n;
+    cin >> n;
+    vi v(n);
+    cin >> v;
+    int maxodd = -1;
+    vi even;
+    for(int i = 0; i < n; i++) {
+        if (v[i] % 2 == 1) {
+            maxodd = max(maxodd, v[i]);
+        } else {
+            even.push_back(v[i]);
+        }
+    }
 
-    double left = min(a, n-a+1);
-    int ans = 0;
-    ans += ceil(log2(left)) + 1;
-    ans += ceil(log2(m));
+    if (maxodd == -1) {
+        cout << "0\n";
+        return;
+    }
 
-    left = min(b, m-b+1);
-    int ans2 = 0;
-    ans2 += ceil(log2(left)) + 1;
-    ans2 += ceil(log2(n));
-    cout << min(ans, ans2) << endl;
+    int res = 0;
+    sort(even.begin(), even.end());
+    for(int i = 0; i < even.size(); i++) {
+        if (even[i] > maxodd) {
+            cout << even.size() + 1 << endl;
+            return;
+        } else {
+            res += 1;
+            maxodd = even[i] + maxodd;
+        }
+    }
 
+    cout << res << endl;
 
-
-
+    
+    
     
 
 }

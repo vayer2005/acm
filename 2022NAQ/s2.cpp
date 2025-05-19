@@ -20,7 +20,7 @@ long gcd(long y, long x) {
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
-    cout.precision(10);
+    //cout.precision(10);
 
     int t, s;
     cin >> t >> s;
@@ -41,7 +41,6 @@ int main() {
     ss *= 4;
     ss += 1;
 
-    cout << ss << endl;
     if (tt == ss) {
         cout << 1 << endl;
 
