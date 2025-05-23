@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
-#define ll long long
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+
 #define int long long
 #define pb push_back
 #define ppb pop_back
@@ -17,6 +20,9 @@ const int inf = 9e18;
 const int mod = 1e9 + 7;
 const int NUM = 1000030;
 const int N = 2e5+5;
+
+typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
+
 #define DEBUG(x) cerr << #x << ": " << x << '\n'
 template <typename T, typename Y>
 istream &operator>>(istream &is, pair<T, Y> &p)
@@ -149,23 +155,32 @@ int C(int n, int k)
 
 void solve()
 {
-    double k, x, a;
-    cin >> k >> x >> a;
-
-
-    double coins = a;
-    double losses = 0;
-    while (losses <= x) {
-        int stake = ceil((a-coins+1.0)/(1.0*(k-1.0)));
-        if (stake > coins) {
-            cout << "NO\n";
-            return;
-        }
-        losses++;
-        coins-=stake;
+    int n; cin >> n;
+    vpi pairs(n);
+    for (int i = 0; i < n; i++) {
+        int x; int y;
+        cin >> x >> y;
+        pair<int, int> p = mp(x, y);
+        pairs[i] = p;
     }
 
-    cout << "YES\n";
+    sort(pairs.begin(), pairs.end());
+
+    ordered_set vals;
+
+    int ans = 0;
+    for (auto p : pairs) {
+        ans += vals.size() - vals.order_of_key(p.second);
+
+        vals.insert(p.second);
+    }  
+
+    cout << ans << endl;
+
+
+
+
+    
 
 }  
 

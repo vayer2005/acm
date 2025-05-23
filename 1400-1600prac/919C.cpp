@@ -149,23 +149,27 @@ int C(int n, int k)
 
 void solve()
 {
-    double k, x, a;
-    cin >> k >> x >> a;
+    int n; cin >> n;
+    int ans = 0;
+    vi a(n);
+    cin >> a;
 
+    for (int i = 1; i <= n; i++) {
+        if (n%i == 0) {
+            int k = n/i; int g = 0;
 
-    double coins = a;
-    double losses = 0;
-    while (losses <= x) {
-        int stake = ceil((a-coins+1.0)/(1.0*(k-1.0)));
-        if (stake > coins) {
-            cout << "NO\n";
-            return;
+            for (int j = 0; j < k; j++) {
+                int diff = 0;
+                for (int l = j; l < n; l+=k) {
+                    diff = gcd(diff, abs(a[j] - a[l]));
+                }
+                g = gcd(diff,g);
+            }
+            ans += (g != 1);
         }
-        losses++;
-        coins-=stake;
     }
-
-    cout << "YES\n";
+    cout << ans << endl;
+    
 
 }  
 

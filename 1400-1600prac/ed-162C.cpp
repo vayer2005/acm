@@ -149,23 +149,54 @@ int C(int n, int k)
 
 void solve()
 {
-    double k, x, a;
-    cin >> k >> x >> a;
+    int n, q;
+    cin >> n >> q;
 
+    int arr[n];
 
-    double coins = a;
-    double losses = 0;
-    while (losses <= x) {
-        int stake = ceil((a-coins+1.0)/(1.0*(k-1.0)));
-        if (stake > coins) {
-            cout << "NO\n";
-            return;
-        }
-        losses++;
-        coins-=stake;
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
     }
 
-    cout << "YES\n";
+    int pref[n+1];
+    pref[0] = 0;
+    for(int i = 1; i < n+1; i++) {
+        pref[i] = pref[i-1];
+        if (arr[i-1] == 1) {
+            pref[i]++;
+        }
+    }
+
+    int psum[n+1];
+    psum[0] = 0;
+    for(int i = 1; i < n+1; i++) {
+        psum[i] = psum[i-1];
+        if (arr[i-1] != 1) {
+            psum[i]+= arr[i-1]-1;
+        }
+    }
+
+
+    
+    while(q--) {
+        int l, r;
+        cin >> l >> r;
+
+        int ones = pref[r] - pref[l-1];
+        
+        int non = psum[r] - psum[l-1];
+
+        if (l == r) {
+            cout << "NO\n";
+            continue;
+        }
+        if (non >= ones) {
+            cout << "YES\n";
+            continue;
+        }
+        cout << "NO\n";
+
+    }
 
 }  
 

@@ -147,25 +147,24 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+
 void solve()
 {
-    double k, x, a;
-    cin >> k >> x >> a;
+    int n;
+    cin >> n;
 
-
-    double coins = a;
-    double losses = 0;
-    while (losses <= x) {
-        int stake = ceil((a-coins+1.0)/(1.0*(k-1.0)));
-        if (stake > coins) {
-            cout << "NO\n";
-            return;
-        }
-        losses++;
-        coins-=stake;
+    vi arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
     }
 
-    cout << "YES\n";
+    
+
+
+
+    
+
+    
 
 }  
 
