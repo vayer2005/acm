@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
@@ -153,10 +154,42 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+
 void solve()
 {
     int n;
+    cin >> n;
+    int a[5000+5];
+    int dp[5000+5];
+    int x;
+    int Inf = 0x3f3f3f3f3f3f3f3f;
+    for(int i = 0 ; i <= n ; i ++) a[i] = 0, dp[i] = Inf;
+    int m = 0;
+    
+
+    for(int i = 1; i <= n ; i ++){
+		cin >> x;
+		if(x < n) a[x] ++;
+	}
+
+	while(a[m]) m ++;
+	dp[m] = 0;
+
+	for(int i = m-1 ; i >= 0 ; i --) {
+        for(int j = i+1; j <= m ; j ++) {
+            dp[i] = min(dp[i], dp[j] + j * (a[i]-1) + i);
+        }
+    } 
+
+    /*
+    for(int i = 0; i <= m; i++) {
+        cout << dp[i] << " ";
+    }
+    cout << endl;
+    */
+	printf("%lld\n", dp[0]);
 }  
+
 
 signed main()
 {

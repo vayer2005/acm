@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
@@ -24,6 +25,33 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 #define DEBUG(x) cerr << #x << ": " << x << '\n'
+template <typename T, typename Y>
+istream &operator>>(istream &is, pair<T, Y> &p)
+{
+    is >> p.first >> p.second;
+    return is;
+}
+template <typename T, typename Y>
+ostream &operator<<(ostream &os, pair<T, Y> p)
+{
+    os << p.first << ' ' << p.second << ' ';
+    return os;
+}
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (auto &i : v)
+        is >> i;
+    return is;
+}
+template <typename T>
+ostream &operator<<(ostream &os, vector<T> v)
+{
+    for (auto &i : v)
+        os << i << ' ';
+    return os;
+}
+
 
 vector<int> lp, sieve;
 vector<int> pr;
@@ -126,26 +154,97 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+
 void solve()
 {
-    string s;
-    cin >> s;
-    vector<char> st;
-    st.push_back(s[0]);
+    int n; int h;
+    cin >> n >> h;
 
-    for (int i = 1; i < s.size(); i++) {
-        char c = s[i];
-        if (st.empty()) {
-            cout << "YES\n";
-            return;
-        }
-        if (c == '('){
-            st.push_back(c);
+    int a[n];
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    sort(a, a+n);
+
+    int ser = 1;
+    int blue = 1;
+
+    int ans = 0;
+    int pwr = h;
+    int i = 0;
+    while (i < n) {
+        if (a[i] < pwr) {
+            pwr += a[i]/2;
+            ans = max(ans, i+1);
+            i++;
         } else {
-            st.pop_back();
+            if (ser <= 3) {
+                if (ser == blue) {
+                    pwr *= 3;
+                    ser++;
+                } else {
+                    pwr *= 2;
+                    ser++;
+                }
+            } else {
+                break;
+            }
         }
     }
-    cout << "NO\n";
+
+    pwr=h;
+    ser = 1;
+    blue = 2;
+    i = 0;
+    while (i < n) {
+        if (a[i] < pwr) {
+            pwr += a[i]/2;
+            ans = max(ans, i+1);
+            i++;
+        } else {
+            if (ser <= 3) {
+                if (ser == blue) {
+                    pwr *= 3;
+                    ser++;
+                } else {
+                    pwr *= 2;
+                    ser++;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    pwr=h;
+    ser = 1;
+    blue =3;
+    i = 0;
+
+    while (i < n) {
+        if (a[i] < pwr) {
+            pwr += a[i]/2;
+            ans = max(ans, i+1);
+            i++;
+        } else {
+            if (ser <= 3) {
+                if (ser == blue) {
+                    pwr *= 3;
+                    ser++;
+                } else {
+                    pwr *= 2;
+                    ser++;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    cout << ans << endl;
+
+
 }  
 
 

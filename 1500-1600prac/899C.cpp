@@ -24,6 +24,33 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 #define DEBUG(x) cerr << #x << ": " << x << '\n'
+template <typename T, typename Y>
+istream &operator>>(istream &is, pair<T, Y> &p)
+{
+    is >> p.first >> p.second;
+    return is;
+}
+template <typename T, typename Y>
+ostream &operator<<(ostream &os, pair<T, Y> p)
+{
+    os << p.first << ' ' << p.second << ' ';
+    return os;
+}
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (auto &i : v)
+        is >> i;
+    return is;
+}
+template <typename T>
+ostream &operator<<(ostream &os, vector<T> v)
+{
+    for (auto &i : v)
+        os << i << ' ';
+    return os;
+}
+
 
 vector<int> lp, sieve;
 vector<int> pr;
@@ -128,26 +155,33 @@ int C(int n, int k)
 
 void solve()
 {
-    string s;
-    cin >> s;
-    vector<char> st;
-    st.push_back(s[0]);
+    int n; cin >> n;
 
-    for (int i = 1; i < s.size(); i++) {
-        char c = s[i];
-        if (st.empty()) {
-            cout << "YES\n";
-            return;
-        }
-        if (c == '('){
-            st.push_back(c);
-        } else {
-            st.pop_back();
+    int arr[n];
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    int even = 0;
+    int res = 0;
+    for(int i = n-1; i >= 0; i--) {
+        if (i%2 == 0) { //ODD Pos
+            if (arr[i] >= 0) {
+                even += arr[i];
+                res = max(res, even);
+            }  else {
+                res = max(res, even + arr[i]);
+            } 
+        } else { // Even Pos
+            res = max(res, even);
+            if (arr[i] > 0) {
+                even += arr[i];
+            }
         }
     }
-    cout << "NO\n";
+    
+    cout << res << endl;
 }  
-
 
 signed main()
 {

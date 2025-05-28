@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
@@ -12,6 +13,7 @@ using vpi = vector<pair<int, int>>;
 using pi = pair<int, int>;
 using vi = vector<int>;
 using vvi = vector<vector<int>>;
+using pii=pair<int,int>;
 #define ff first
 #define ss second
 #define all(x) x.begin(), x.end()
@@ -24,6 +26,33 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 #define DEBUG(x) cerr << #x << ": " << x << '\n'
+template <typename T, typename Y>
+istream &operator>>(istream &is, pair<T, Y> &p)
+{
+    is >> p.first >> p.second;
+    return is;
+}
+template <typename T, typename Y>
+ostream &operator<<(ostream &os, pair<T, Y> p)
+{
+    os << p.first << ' ' << p.second << ' ';
+    return os;
+}
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (auto &i : v)
+        is >> i;
+    return is;
+}
+template <typename T>
+ostream &operator<<(ostream &os, vector<T> v)
+{
+    for (auto &i : v)
+        os << i << ' ';
+    return os;
+}
+
 
 vector<int> lp, sieve;
 vector<int> pr;
@@ -126,26 +155,78 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+int n;
+int tab[1000*1007];
+
 void solve()
 {
-    string s;
-    cin >> s;
-    vector<char> st;
-    st.push_back(s[0]);
 
-    for (int i = 1; i < s.size(); i++) {
-        char c = s[i];
-        if (st.empty()) {
-            cout << "YES\n";
-            return;
-        }
-        if (c == '('){
-            st.push_back(c);
-        } else {
-            st.pop_back();
-        }
-    }
-    cout << "NO\n";
+    cin >> n;
+
+	int s=0;
+	for (int i=1; i<=n; i++)
+	{
+		cin >> tab[i];
+		s+=tab[i];
+	}
+
+	if (s&1)
+	{
+		cout << "-1\n";
+		return;
+	}
+
+	vi gdz;
+	for (int i=1; i<=n; i++)
+		if (tab[i])
+			gdz.push_back(i);
+
+	int ost=0;
+	vector<pii> wek;
+	for (int i=0; i<(int)gdz.size(); i+=2)
+	{
+		int a=gdz[i];
+		int b=gdz[i+1];
+		if (ost<a-1)
+		{
+			wek.push_back({ost+1, a-1});
+		}
+		if (tab[a]==tab[b])
+		{
+			if ((a&1)!=(b&1))
+			{
+				wek.push_back({a, b});
+			}
+			else
+			{
+				wek.push_back({a, a});
+				wek.push_back({a+1, b});
+			}
+		}
+		else
+		{
+			if ((a&1)==(b&1))
+			{
+				wek.push_back({a, b});
+			}
+			else
+			{
+				wek.push_back({a, a});
+				wek.push_back({a+1, b});
+			}
+		}
+		
+		ost=b;
+	}
+
+	if (ost<n)
+		wek.push_back({ost+1, n});
+	
+	
+	cout << (int)wek.size() << endl;
+	for (pii i : wek)
+		cout << i.first << " " <<  i.second << endl;
+
 }  
 
 
@@ -155,9 +236,7 @@ signed main()
     cin.tie(0);
     int t;
     cin >> t;
-    fact[0] = 1;
-	for(int64_t i = 1; i < N; ++i) fact[i] = (fact[i - 1] * i) % mod;
+    
     while (t--)
         solve();
-    return 0;
 }

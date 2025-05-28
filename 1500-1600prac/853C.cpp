@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 
@@ -24,6 +25,33 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 #define DEBUG(x) cerr << #x << ": " << x << '\n'
+template <typename T, typename Y>
+istream &operator>>(istream &is, pair<T, Y> &p)
+{
+    is >> p.first >> p.second;
+    return is;
+}
+template <typename T, typename Y>
+ostream &operator<<(ostream &os, pair<T, Y> p)
+{
+    os << p.first << ' ' << p.second << ' ';
+    return os;
+}
+template <typename T>
+istream &operator>>(istream &is, vector<T> &v)
+{
+    for (auto &i : v)
+        is >> i;
+    return is;
+}
+template <typename T>
+ostream &operator<<(ostream &os, vector<T> v)
+{
+    for (auto &i : v)
+        os << i << ' ';
+    return os;
+}
+
 
 vector<int> lp, sieve;
 vector<int> pr;
@@ -126,26 +154,53 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+
 void solve()
 {
-    string s;
-    cin >> s;
-    vector<char> st;
-    st.push_back(s[0]);
+    int n; int m;
+    cin >> n >> m;
+    int arr[n];
+    int appear[n+m+1];
+    int count[n+m+1];
+    for(int i = 0; i <= n+m; i++) {
+        appear[i] = -1;
+        count[i] = 0;
+    }
 
-    for (int i = 1; i < s.size(); i++) {
-        char c = s[i];
-        if (st.empty()) {
-            cout << "YES\n";
-            return;
-        }
-        if (c == '('){
-            st.push_back(c);
-        } else {
-            st.pop_back();
+    for(int i =0; i < n; i++) {
+        cin >> arr[i];
+        appear[arr[i]] = 0;
+    }
+    
+
+    
+    int ind; int val;
+    for (int i = 1; i <= m; i++) {
+        cin >> ind >> val; ind--;
+        int x = arr[ind];
+        arr[ind] = val;
+
+        count[x] += i - appear[x];
+        appear[x] = -1;
+
+        appear[val] = i;
+    }
+
+    for (int i = 0; i <= n+m; i++) {
+        if (appear[i] != -1) {
+            count[i] += m+1 - appear[i];
         }
     }
-    cout << "NO\n";
+
+    int ans = 0;
+    for(int i = 1; i <= n+m; i++) {
+        ans += (m*(m+1))/2 - ((m-count[i]) * (m-count[i]+1))/2;
+    }
+
+    cout << ans << endl;
+
+
+    
 }  
 
 
