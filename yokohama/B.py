@@ -1,23 +1,27 @@
-a, b = map(int, input().split())
-
-# Step 1: Check for power of 2 in range
-x = 1
-while x <= b:
-    if a <= x <= b:
-        print(x)
-        exit()
-    x <<= 1  # Multiply by 2
-
-# Step 2: Otherwise, check for minimal popcount (bit count)
-answer = a
-min_ones = bin(a).count('1')
-
-for num in range(a, b + 1):
-    ones = bin(num).count('1')
-    if ones < min_ones:
-        min_ones = ones
-        answer = num
-    elif ones == min_ones and num < answer:
-        answer = num
-
-print(answer)
+a, b = input().split(" ")
+a = bin(int(a))[2:]
+b = bin(int(b))[2:]
+    
+a = "0" * (len(b) - len(a)) + a
+differ_index = -1 # index of first 0 in small number and 1 in larger number
+for i in range(len(b)):
+    if a[i] != b[i]:
+        differ_index = i
+        break
+    
+if differ_index == -1:
+    print(int(a, base=2))
+else:
+    count = 0
+    last_zero = -1
+    for i in range(differ_index + 1, len(b)):
+        if a[i] == "1":
+            if last_zero == -1:
+                last_zero = i
+            count += 1
+    if count >= 2:
+        pre_zeros = last_zero - differ_index - 1
+        post_zeros = len(b) - differ_index - 1 - pre_zeros
+        print(int(a[:differ_index] + "0" * pre_zeros + "1" + "0" * post_zeros, base=2))
+    else:
+        print(int(a, base=2))
