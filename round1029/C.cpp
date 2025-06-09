@@ -156,35 +156,29 @@ int C(int n, int k)
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n; cin >> n;
+    int arr[n];
 
-    int startind = -1;
-    int endind = -1;
-    int a[n];
+    for (int i = 0; i < n; i++) cin >> arr[i];
 
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    
-    for (int i = 0; i < n; i++) {
-        if (a[i] == 1) {
-            startind = i;
-            break;
+    set<int> adds;
+    set<int> next;
+    adds.insert(arr[0]);
+    next.insert(arr[0]);
+
+    int groups = 1;
+    for (int i =1; i < n; i++) {
+        if (adds.find(arr[i]) != adds.end()) {
+            adds.erase(arr[i]);
+        }
+        next.insert(arr[i]);
+        if (adds.empty()) {
+            groups++;
+            adds = next;
         }
     }
 
-    for (int i = n-1; i >= 0; i--) {
-        if (a[i] == 1) {
-            endind = i;
-            break;
-        }
-    }
-
-    if (startind == -1) cout << "YES\n";
-    else if (endind - startind + 1 <= x) cout << "YES\n";
-    else cout << "NO\n";
-
+    cout << groups << endl;
 }  
 
 signed main()

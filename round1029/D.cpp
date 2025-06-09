@@ -156,35 +156,30 @@ int C(int n, int k)
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n; cin >> n;
+    int arr[n];
 
-    int startind = -1;
-    int endind = -1;
-    int a[n];
+    for (int i = 0; i < n; i++) cin >> arr[i];
 
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    
-    for (int i = 0; i < n; i++) {
-        if (a[i] == 1) {
-            startind = i;
-            break;
+    int diff = arr[1] - arr[0];
+
+    for (int i = 2; i < n; i++) {
+        if (arr[i] - arr[i-1] != diff) {
+            cout << "NO\n";
+            return;
         }
     }
 
-    for (int i = n-1; i >= 0; i--) {
-        if (a[i] == 1) {
-            endind = i;
-            break;
-        }
+    int minEl = arr[0]; int maxEl = arr[n-1];
+    if (maxEl < minEl) swap(minEl, maxEl);
+
+    int x = (minEl*n - maxEl)/(pow(n,2)-1);
+
+    if (x >= 0 && minEl-x*n > 0 && (minEl-x*n)*n == maxEl-x) {
+        cout << "YES\n";
+        return;
     }
-
-    if (startind == -1) cout << "YES\n";
-    else if (endind - startind + 1 <= x) cout << "YES\n";
-    else cout << "NO\n";
-
+    cout << "NO\n";
 }  
 
 signed main()

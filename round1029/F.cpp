@@ -153,48 +153,106 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<int> adj[200001];
 
-void solve()
-{
-    int n, x;
-    cin >> n >> x;
+int leaves = 0;
+int pw[N];
 
-    int startind = -1;
-    int endind = -1;
-    int a[n];
-
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+int dfs1(int val, int par) {
     
-    for (int i = 0; i < n; i++) {
-        if (a[i] == 1) {
-            startind = i;
-            break;
+    int ans = 1;
+    for (int x : adj[val]) {
+        if (x != par) {
+            ans += dfs1(x, val);
         }
     }
 
-    for (int i = n-1; i >= 0; i--) {
-        if (a[i] == 1) {
-            endind = i;
-            break;
+    if (ans == 1) leaves++;
+
+    return ans;
+}
+
+bool reached = false;
+
+int dfs2(int val, int par) {
+    vector<int> children;
+
+    for (int x : adj[val]) {
+        if (x != par) {
+            children.pb(x);
         }
     }
 
-    if (startind == -1) cout << "YES\n";
-    else if (endind - startind + 1 <= x) cout << "YES\n";
-    else cout << "NO\n";
+    if (children.size() == 1) {
+        int v = dfs2(children[0], val);
+        if (reached) {
+            return (2 * v) % mod;
+        } else {
+            return v + 1;
+        }
+    } else if (children.size() == 0) {
+        return 1;
+    } else {
+        int l = dfs2(children[0], val);
+        int s = dfs2(children[1], val);
 
-}  
+        //cout << l << " " << s << endl;
+        if (l < s) swap(l, s);
 
+        int diff = l-s;
+        if (diff == 0) {
+            reached = true;
+            return 4;
+        }
+
+        int res = (2 * (pw[diff] + pw[diff-1]))% mod;
+
+        reached = true;
+        return res;
+    }
+}
+
+void solve() {
+    int n, u, v;
+
+    cin >> n;
+    for(int i = 1; i <= n; i++) adj[i].clear();
+
+    leaves = 0;
+    reached = false;
+
+    
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    int nodes = dfs1(1, -1);
+    if (leaves > 2) {
+        cout << "0\n";
+        return;
+    } else if (leaves == 1) {
+        int res = pw[nodes];
+        cout << res << endl;
+        return;
+    } else {
+        int r = dfs2(1, -1);
+        cout << r << endl;
+        return;
+    }
+}
 signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
+    pw[0] = 1;
+    for(int i = 1; i < N; i++) pw[i] = (pw[i - 1] * 2) % mod;
+    int t; cin >> t;
+
+    while (t--) {
         solve();
-    return 0;
+    }
+    
 }
