@@ -218,19 +218,7 @@ void solve() {
         }
     }
 
-    /*
-    for (int i = 1; i <= n; i++) {
-        cout << fromS[i] << " ";
-    }
-    cout << endl;
-    for (int i = 1; i <= n; i++) {
-        cout << fromT[i] << " ";
-    }
-    cout << endl;
-    */
     cout << ans << endl;
-
-
 }
 
 signed main()

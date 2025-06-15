@@ -153,40 +153,61 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+int n,m,a,b,lp;
+int p[55],d[55];
 
-void solve()
-{
-    int n; cin >> n;
+int find(int x){
+  if(p[x]==x) return x;
+  else return  p[x] = find(p[x]);
+}
 
-    vector<vector<int>> res;
-
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
-        }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
-        }
+void cal(){
+   if(n < m){
+     printf("NO\n");
+     return ;
+   }
+   for(int i=1;i<=n;i++) p[i]=i;
+   for(int i=1;i<=m;i++) {
+     scanf("%d%d",&a,&b);
+     d[a]++; d[b]++;
+     if(d[a]>2 || d[b]>2 ){
+        printf("NO\n");
+        return ;
+     }
+ 
+     if(p[a] == p[b]) lp++;
+     else p[find(a)] = find(b);
+ 
+   }
+   if(lp>0){
+     if(lp==1 && m==n) {printf("YES\n0");return;}
+     else {printf("NO\n"); return ;}
+   }
+ 
+   printf("YES\n%d\n",n-m);
+   for(int i=1;i<=n;i++){
+     for(int j=i+1;j<=n;j++){
+      if(d[i]<2&&d[j]<2&&find(i)!=find(j)){
+        printf("%d %d\n",i,j);
+        d[i]++; d[j]++;
+        p[find(i)] = p[find(j)];
+      }
     }
+   }
 
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
+
+   for (int i = 1; i <= n; i++) {
+    for(int j=n;j>=i;j--){
+      if(d[i]<2&&d[j]<2){
+        printf("%d %d\n",i,j);
+        d[i]++; d[j]++;
+ 
+      }
     }
-
-    
-}  
-
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
+   } 
+}
+signed main(){
+    scanf("%d%d",&n,&m);
+    cal();
     return 0;
 }

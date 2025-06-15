@@ -153,40 +153,81 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<vector<int>> edges;
+vector<int> adj[101];
 
-void solve()
-{
-    int n; cin >> n;
+vector<int> color(101,-1);
+vector<int> vis(101,0);
 
-    vector<vector<int>> res;
 
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
+int dfs(int val) {
+    vis[val] = 1;
+    bool res = true;
+    for (int x : adj[val]) {
+        if (color[val] == color[x]) return false;
+        if (vis[x] != 1) {
+            color[x] = !color[val];
+            res = res & dfs(x);
         }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
+    }
+    return res;
+}
+
+signed main(){
+    int n, m;
+    cin >> n >> m;
+    int u, v;
+    for (int i = 0; i < m; i++) {
+        cin >> u >> v;
+        if (u > v) {
+            int temp = u;
+            u = v;
+            v = temp;
+        }
+        edges.pb({u,v});
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = i+1; j < m; j++) {
+            if ((edges[j][0] < edges[i][1] && edges[j][0] > edges[i][0] && edges[j][1] > edges[i][1]) || 
+                (edges[i][0] < edges[j][1] && edges[i][0] > edges[j][0] && edges[i][1] > edges[j][1])) {
+                adj[i].pb(j);
+                adj[j].pb(i);
+            }
+        }
+    }
+    
+
+    for (int i = 0; i < 101; i++) {
+        color[i] = -1;
+    }
+
+
+    
+    bool res = true;
+    for (int i = 0;i<m; i++) {
+        if (!vis[i]){
+            color[i] = 0;
+            res = res & dfs(i);
         }
     }
 
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
+
+    if (!res) {
+        cout << "Impossible\n";
+        return 0;
     }
 
-    
-}  
 
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin >> t;
+    for (int i = 0; i < m; i++) {
+        if (color[i] == 1) {
+            cout << "i";
+        } else {
+            cout << "o";
+        }
+    }
+    cout << endl;
+
     
-    while (t--)
-        solve();
-    return 0;
+    
 }

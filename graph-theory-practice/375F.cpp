@@ -154,39 +154,134 @@ int C(int n, int k)
 }
 
 
-void solve()
+int n, m;
+int s, t, ds, dt;
+ 
+vector <int> v[200010];
+ 
+int group[200010];
+bool chk[200010];
+ 
+int slink[200010], tlink[200010];
+ 
+int pn;
+int print[200010][3];
+int os[200010], ot[200010], co[200010];
+ 
+int min ( int a, int b ){
+	if ( a > b ) return b;
+	return a;
+}
+ 
+void dfs ( int k )
 {
-    int n; cin >> n;
-
-    vector<vector<int>> res;
-
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
-        }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
-        }
-    }
-
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
-    }
-
-    
-}  
-
-signed main()
+	int i;
+	for(i=0; i<v[k].size(); i++){
+		if ( !chk[ v[k][i] ] ){
+			group[v[k][i]] = group[k];
+			chk[v[k][i]] = true;
+ 
+			print[++pn][1] = k;
+			print[pn][2] = v[k][i];
+			
+			dfs ( v[k][i] );
+		}
+	}
+}
+ 
+int main ()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
-    return 0;
+	cin >> n >> m;
+ 
+	int i, a, b;
+	for(i=1; i<=m; i++){
+		cin >> a >> b;
+ 
+		v[a].push_back ( b );
+		v[b].push_back ( a );
+	}
+	cin >> s >> t >> ds >> dt;
+ 
+	for(i=1; i<=n; i++){
+		group[i] = i;
+	}
+ 
+	chk[s] = 1, chk[t] = 1;
+	for(i=1; i<=n; i++){
+		if ( i != s && i != t && group[i] == i ){
+			chk[i] = 1;
+			dfs ( i );
+		}
+	}
+ 
+	for(i=0; i<v[s].size(); i++){
+		if ( slink[group[v[s][i]]] == 0 ){
+			slink[group[v[s][i]]] = v[s][i];
+		}
+	} for(i=0; i<v[t].size(); i++){
+		if ( tlink[group[v[t][i]]] == 0 ){
+			tlink[group[v[t][i]]] = v[t][i];
+		}
+	}
+ 
+	int onlys = 0, onlyt = 0, common = 0;
+	for(i=1; i<=n; i++){
+		if ( i == s || i == t ) continue;
+ 
+		if ( slink[i] != 0 && tlink[i] != 0 ){
+			common ++;
+			co[common] = i;
+		} else if ( slink[i] == 0 && tlink[i] != 0 ){
+			onlyt ++;
+			ot[onlyt] = i;
+		} else if ( slink[i] != 0 && tlink[i] == 0 ){
+			onlys ++;
+			os[onlys] = i;
+		}
+	}
+ 
+	if ( common == 0 ){
+		if ( ds-1 >= onlys && dt-1 >= onlyt ){
+			printf("Yes\n");
+ 
+			for(i=1; i<=pn; i++){
+				printf("%d %d\n", print[i][1], print[i][2]);
+			}
+ 
+			for(i=1; i<=onlys; i++){
+				printf("%d %d\n", s, slink[os[i]]);
+			} for(i=1; i<=onlyt; i++){
+				printf("%d %d\n", t, tlink[ot[i]]);
+			} printf("%d %d\n", s, t);
+		} else {
+			printf("No\n");
+		}
+	} else {
+		if ( ds-1 >= onlys && dt-1 >= onlyt && ds+dt-onlys-onlyt >= common+1 ){
+			printf("Yes\n");
+ 
+			for(i=1; i<=pn; i++){
+				printf("%d %d\n", print[i][1], print[i][2]);
+			}
+ 
+			for(i=1; i<=onlys; i++){
+				printf("%d %d\n", s, slink[os[i]]);
+			} for(i=1; i<=onlyt; i++){
+				printf("%d %d\n", t, tlink[ot[i]]);
+			}
+ 
+			printf("%d %d\n", s, slink[co[1]]);
+			printf("%d %d\n", t, tlink[co[1]]);
+ 
+			for(i=2; i<=min(common, ds-onlys); i++){
+				printf("%d %d\n", s, slink[co[i]]);
+			} for(; i<=common; i++){
+				printf("%d %d\n", t, tlink[co[i]]);
+			}
+		} else {
+			printf("No\n");
+		}
+	}
+ 
+	return 0;
 }

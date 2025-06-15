@@ -155,27 +155,34 @@ int C(int n, int k)
 
 
 void solve()
-{
-    int n; cin >> n;
+{   
+    int n, x;
+    cin >> n;
+    cout << "digit" << endl;
+    cout.flush();
+    cin >> x;
+    cout << "digit" << endl;
+    cout.flush();
+    cin >> x;
 
-    vector<vector<int>> res;
-
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
-        }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
-        }
-    }
-
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
-    }
-
+    cout << "add -8" << endl;
+    cout.flush();
+    cin >> x;
+    cout << "add -4" << endl;
+    cout.flush();
+    cin >> x;
+    cout << "add -2"<< endl;
+    cout.flush();
+    cin >> x;
+    cout << "add -1"<< endl;
+    cout.flush();
+    cin >> x;
+    cout << "add " << n-1 << endl;
+    cout.flush();
+    cin >> x;
+    cout << "!\n";
+    cout.flush();
+    cin >> x;  
     
 }  
 

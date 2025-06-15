@@ -8,6 +8,7 @@ using namespace std;
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
+#define MOD 1000000007
 using vpi = vector<pair<int, int>>;
 using pi = pair<int, int>;
 using vi = vector<int>;
@@ -153,40 +154,69 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-
-void solve()
-{
-    int n; cin >> n;
-
-    vector<vector<int>> res;
-
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
-        }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
-        }
+ 
+vector<vector<int>> e, en;
+vector<int> nf, nu, inst;
+ 
+vector<int> st;
+int findcycle(int x, int pe) {
+  if (inst[x]) {
+    for (int ret = 1; ; ret++) if (st[st.size()-ret] == x) return ret;
+  }
+  inst[x] = true;
+  st.push_back(x);
+  for (int i = 0; i < e[x].size(); i++) if (pe != en[x][i]) {
+    int ret = findcycle(e[x][i], en[x][i]);
+    if (ret) return ret;
+  }
+  st.pop_back();
+  inst[x] = false;
+  return 0;
+}
+ 
+void fill(int x) {
+  if (nf[x] != -1) return;
+  nf[x] = nu[x] = 0;
+  for (int i = 0; i < e[x].size(); i++) fill(e[x][i]);
+}
+ 
+void doit(int x, int pe) {
+  nf[x] = 1;
+  nu[x] = 0;
+  for (int i = 0; i < e[x].size(); i++) if (pe != en[x][i]) {
+    doit(e[x][i], en[x][i]);
+    nf[x] = ((long long)nf[x] + nf[e[x][i]] + nu[e[x][i]]) % MOD;
+    nu[x] = (nu[x] + nu[e[x][i]]) % MOD;
+  }
+}
+ 
+signed main() {
+  int N;
+  while (cin >> N) {
+    e = en = vector<vector<int>>(2*N+1);
+    for (int i = 0; i < N; i++) {
+      int x, y;
+      cin >> x >> y;
+      e[x].push_back(y);
+      e[y].push_back(x);
+      en[x].push_back(i);
+      en[y].push_back(i);
     }
-
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
+ 
+    int ret = 1;
+    nf = nu = vector<int>(2*N+1, -1);
+    inst = vector<int>(2*N+1);
+    for (int x = 1; x <= 2*N; x++) if (nf[x] == -1) {
+      int c = findcycle(x, -1);
+      if (c) {
+        fill(x);
+        ret = (ret*(c==1?1:2))%MOD;
+        continue;
+      }
+      doit(x, -1);
+      ret = (ret * ((long long)nf[x]+nu[x])) % MOD;
     }
-
-    
-}  
-
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
-    return 0;
+ 
+    cout << ret << endl;
+  }
 }

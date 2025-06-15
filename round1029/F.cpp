@@ -154,7 +154,6 @@ int C(int n, int k)
 }
 
 vector<int> adj[200001];
-
 int leaves = 0;
 int pw[N];
 
@@ -196,7 +195,6 @@ int dfs2(int val, int par) {
         int l = dfs2(children[0], val);
         int s = dfs2(children[1], val);
 
-        //cout << l << " " << s << endl;
         if (l < s) swap(l, s);
 
         int diff = l-s;

@@ -153,40 +153,92 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-
-void solve()
+struct DSU
 {
+	int S;
+	
+	struct node
+	{
+		int p; int sum;
+	};
+	vector<node> dsu;
+	
+	DSU(int n)
+	{
+		S = n;
+		for(int i = 0; i < n; i++)
+		{
+			node tmp;
+			tmp.p = i; tmp.sum = 0;
+			dsu.pb(tmp);
+		}
+	}
+	
+	void reset(int n)
+	{
+		dsu.clear();
+		S = n;
+		for(int i = 0; i < n; i++)
+		{
+			node tmp;
+			tmp.p = i; tmp.sum = 0;
+			dsu.pb(tmp);
+		}
+	}
+	
+	int rt(int u)
+	{
+		if(dsu[u].p == u) return u;
+		dsu[u].p = rt(dsu[u].p);
+		return dsu[u].p;
+	}
+	
+	void merge(int u, int v)
+	{
+		u = rt(u); v = rt(v);
+		if(u == v) return ;
+		if(rand()&1) swap(u, v);
+		dsu[v].p = u;
+		dsu[u].sum += dsu[v].sum;
+	}
+	
+	bool sameset(int u, int v)
+	{
+		if(rt(u) == rt(v)) return true;
+		return false;
+	}
+	
+	int getstat(int u)
+	{
+		return dsu[rt(u)].sum;
+	}
+};
+
+
+signed main(){
     int n; cin >> n;
+    int u, v;
 
-    vector<vector<int>> res;
-
-    for (int i = 1; i <= n; i++) {
-        int l1 = i; int r1 = n;
-        int l2 = 1; int r2 = l1 - 1;
-        if (l1 < r1) {
-            res.pb({i, l1, r1});
-        }
-        if (l2 < r2) {
-            res.pb({i, l2, r2});
+    DSU dsu(n+1);
+    vector<pair<int,int>>close;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        if (dsu.sameset(u, v)) close.pb({u,v});
+        else {
+            dsu.merge(u, v);
         }
     }
 
-    cout << res.size() << endl;
-    for (auto x  : res) {
-        cout << x[0] << " " << x[1] << " " << x[2] << endl;
+    vector<pair<int,int>> open;
+    for (int i = 2; i <= n; i++) {
+        if (dsu.rt(1) != dsu.rt(i)) {
+            dsu.merge(1,i);
+            open.pb({1,i});
+        }
     }
 
-    
-}  
-
-signed main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
-    return 0;
+    cout << close.size() << endl;
+    for (int i = 0; i < close.size(); i++) {
+        cout << close[i].first << " " << close[i].second << " " << open[i].first << " " << open[i].second << endl;
+    }
 }
