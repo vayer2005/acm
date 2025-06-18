@@ -156,37 +156,55 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    int r, c;
+    cin >> r >> c;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    int a[r][c];
+    int total[101];
+    int maxNum = 0;
+    memset(total,0,sizeof(total));
+
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            cin >>a[i][j];
+            total[a[i][j]]++;
+            maxNum = max(maxNum, a[i][j]);
+        }
     }
+    
 
-    int xovr = x2 - (x1 + a);
+    //row, num
+    int row[r][101];
+    int col[c][101];
+    memset(row, 0, sizeof(row));
+    memset(col, 0, sizeof(col));
 
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
-
-    int yovr = y2 - (y1 + b);
-
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
-            return;
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            row[i][a[i][j]]++;
         }
     }
 
-    cout << "YES\n";
-    return;
+    for (int i = 0; i < c; i++) {
+        for (int j = 0; j < r; j++) {
+            col[i][a[j][i]]++;
+        }
+    }
+
+    int appear = 1e9;
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            int ap = row[i][maxNum] + col[j][maxNum] - (a[i][j] == maxNum);
+            if (ap == total[maxNum]) {
+                cout << maxNum-1 << endl;
+                return;
+            }
+        }
+    }
+    cout << maxNum << endl;
 }  
+
+
 
 signed main()
 {

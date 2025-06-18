@@ -156,37 +156,43 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    string l,r;
+    cin >> l >> r;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    if (l == r) {
+        cout << l.size() * 2 << endl;
+        return;
     }
 
-    int xovr = x2 - (x1 + a);
-
-    if (y1 > y2) {
-        swap(y1,y2);
+    int s = 1;
+    while (s <= l.size() && l.substr(0,s) == r.substr(0,s)) {
+        s++; 
     }
 
-    int yovr = y2 - (y1 + b);
+    s-=1;
+    int ans = s * 2;
+    int rem = l.size() - s;
+    //cout << ans << " " << rem << endl;    
 
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
-            return;
+    int v = stoi(l.substr(s, rem));
+    int v2 = stoi(r.substr(s, rem));
+
+    
+    while (rem > 0 && v < v2-1) {
+        rem-=1;
+        if (rem == 0) {
+            break;
         }
+        v = stoi(l.substr(s, rem));
+        v2 = stoi(r.substr(s, rem)); 
     }
 
-    cout << "YES\n";
-    return;
+    ans += rem;
+    cout << ans << endl;
+
 }  
+
+
 
 signed main()
 {

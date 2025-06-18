@@ -153,49 +153,59 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+void solve() {
+    int n;
+    cin >> n;
 
-void solve()
-{
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
-
-    if (x1 > x2) {
-        swap(x1,x2);
+    int a[n];
+    map<int, int> occur;
+    set<int> days;
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        occur[a[i]]++;
+        days.insert(a[i]);
     }
 
-    int xovr = x2 - (x1 + a);
-
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
-
-    int yovr = y2 - (y1 + b);
-
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
+    int chain = 0;
+    int prev = -1;
+    while (!days.empty()) {
+        int day = *days.begin();
+        int bets= occur[day];
+        if (bets >= 4) {
+            cout << "Yes\n";
             return;
         }
+
+        if (day == prev + 1) {
+            if (chain && bets >= 2) {
+                cout << "Yes\n";
+                return;
+            } 
+            if (bets >= 2) chain = 1;
+        } else {
+            //reset
+            chain = 0;
+            if (bets >= 2) chain = 1;
+        }
+        days.erase(day);
+        prev = day;
+        
     }
 
-    cout << "YES\n";
-    return;
-}  
+    cout << "No\n";
 
-signed main()
-{
+    
+    
+
+}
+
+signed main() {
     ios_base::sync_with_stdio(false);
-    cin.tie(0);
+    cin.tie(nullptr);
     int t;
     cin >> t;
-    
-    while (t--)
+    while (t--) {
         solve();
-    return 0;
+    }
+
 }

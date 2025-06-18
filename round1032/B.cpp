@@ -156,36 +156,68 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    int n;
+    cin >> n;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    string s;
+    cin >> s;
+
+    int seenb[26][n];
+    int seena[26][n];
+    memset(seenb, 0, sizeof(seenb));
+    memset(seena, 0, sizeof(seena));
+
+    
+    for (int i = 0; i < 26; i++) {
+        seenb[i][0] = 0;
+        if (s[0] - 'a' == i) {
+            seenb[i][0] = 1;
+        }
     }
 
-    int xovr = x2 - (x1 + a);
+    
 
-    if (y1 > y2) {
-        swap(y1,y2);
+    for (int i = 1; i < n; i++) {
+        int m = s[i] - 'a';
+        for (int j = 0; j < 26; j++) {
+            seenb[j][i] = seenb[j][i-1] + (j == m);
+        }
     }
 
-    int yovr = y2 - (y1 + b);
 
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
+
+    for (int i = 0; i < 26; i++) {
+        seena[i][n-1] = 0;
+        if (s[n-1] - 'a' == i) {
+            seena[i][n-1] = 1;
+        }
+    }
+
+    for (int i = n-2; i >= 0; i--) {
+        int m = s[i] - 'a';
+        for (int j = 0; j < 26; j++ ) {
+            seena[j][i] = seena[j][i+1];
+            if (j == s[i] - 'a') {
+                seena[j][i] = seena[j][i+1] + (j == m);
+            }
+        }
+    }
+
+    
+
+    for (int i = 1; i < n-1; i++) {
+        int m = s[i] - 'a';
+        if (seenb[m][i-1] > 0 || seena[m][i+1] > 0) {
+            cout << "YES\n";
             return;
         }
     }
 
-    cout << "YES\n";
-    return;
+    cout << "NO\n";
+
+
+
+
 }  
 
 signed main()

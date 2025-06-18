@@ -156,36 +156,78 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    int n;
+    cin >> n;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    int verd;
+    cout << "? 0" << endl;
+    cout.flush();
+    cin >> verd;
+    if (verd == 0) {
+        cout << "! " << string(n, '1') << endl;
+        cout.flush();
+        return;
     }
 
-    int xovr = x2 - (x1 + a);
-
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
-
-    int yovr = y2 - (y1 + b);
-
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
+    int ops = 1;
+    string sol = "0";
+    bool found = false;
+    while (!found) {
+        if (sol.size() == n) {
+            cout << "! " << sol << endl;
+            cout.flush();
             return;
         }
+        cout << "? " << sol << "0" << endl;
+        ops += 1;
+        cout.flush();
+        cin >> verd;
+        if (verd) sol += "0";
+        if (!verd) {
+            cout << "? " << sol << "1" << endl;
+            cout.flush();
+            cin >> verd;
+            if (verd) sol +="1";
+            ops += 1;
+        }
+        if (!verd) found = true;
+    }   
+
+    bool beg = false;
+    while (!beg) {
+        if (sol.size() == n) {
+            cout << "! " << sol << endl;
+            cout.flush();
+            return;
+        }
+        
+        cout << "? 0" << sol << endl;
+        cout.flush();
+        cin >> verd;
+        ops += 1;
+        if (verd) sol = "0" + sol;
+        if (sol.size() == n) {
+            cout << "! " << sol << endl;
+            cout.flush();
+            return;
+        }
+        if (ops == 2 * n) {
+            cout << "! 1" << sol << endl;
+            cout.flush();
+            return; 
+        }
+        if (!verd) {
+            cout << "? 1" << sol << endl;
+            cout.flush();
+            cin >> verd;
+            if (verd) sol = "1"+sol;
+            ops += 1;
+        }
+        if (!verd) beg = true;
     }
 
-    cout << "YES\n";
-    return;
+    cout << "! " << sol << endl;
+    cout.flush();
 }  
 
 signed main()

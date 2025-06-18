@@ -153,39 +153,85 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+int n, m, k;
+
+
+char grid[501][501];
+int psum[501][501];
+int a[501][501];
+
+void prefixSum2D()
+{
+    
+    psum[0][0] = a[0][0];
+
+    for (int i = 0; i < m; i++)
+        psum[0][i] = psum[0][i - 1] + a[0][i];
+    for (int i = 0; i < n; i++)
+        psum[i][0] = psum[i - 1][0] + a[i][0];
+
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++)
+            psum[i][j] = psum[i - 1][j] + psum[i][j - 1] - psum[i - 1][j - 1] + a[i][j];
+    }
+}
+
+
+int findRad(int x, int y) {
+
+    int i1 = max(x - k+1, 0LL);
+    int i2 = min(n-1,  x + k-1);
+
+    int j1 = max(y - k+1, 0LL); 
+    int j2 = min(y + k - 1, m-1);
+
+    int wek = psum[i2][j2];
+    if (i1 > 0) {
+        wek -= psum[i1-1][j2];
+    }
+    if (j1 > 0) {
+        wek -= psum[i2][j1-1];
+    }
+    if (i1 > 0 && j1 > 0) {
+        wek += psum[i1-1][j1-1];
+    }
+
+    return wek;
+}
+
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    cin >> n >> m >> k;
+    memset(a, 0, sizeof(a));
+    memset(psum, 0, sizeof(psum));
+
+    int gold=0;
+    string s;
+    for(int i = 0; i < n; i++) {
+        cin >> s;
+        for (int j = 0; j < m; j++) {
+            grid[i][j] = s[j];
+            if (grid[i][j] == 'g') {
+                gold++;
+                a[i][j] = 1;
+            }
+        }    
     }
 
-    int xovr = x2 - (x1 + a);
+    prefixSum2D();
 
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
+    int res = 0;
 
-    int yovr = y2 - (y1 + b);
-
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
-            return;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (grid[i][j] == '.') res=max(res, gold-findRad(i,j));
         }
     }
 
-    cout << "YES\n";
-    return;
+    cout << res << endl;
 }  
 
 signed main()

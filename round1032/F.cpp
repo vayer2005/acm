@@ -156,37 +156,46 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    int n, s, x;
+    cin >> n >> s >> x;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    int a[n+1];
+    int p[n];
+    for (int i = 1; i<= n; i++) {
+        cin >> a[i];
+    }
+    p[0] = 0;
+    for (int i = 1; i <= n; i++) {
+        p[i] = p[i-1] + a[i];
     }
 
-    int xovr = x2 - (x1 + a);
 
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
 
-    int yovr = y2 - (y1 + b);
+    int l = 1;
+    int r = 1;
+    map<int,int> occur;
 
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
-            return;
+    int ans = 0;
+    
+    while (r <= n) {
+        if (a[r] > x) {
+            occur.clear();
+            l = r + 1;
+        } else if (a[r] == x) {
+            while (l <= r) {
+                occur[p[l-1]]++;
+                l++;
+            }
         }
-    }
+        ans += occur[p[r]-s];
+        r++;
+    }   
+    cout << ans << endl;
 
-    cout << "YES\n";
-    return;
+
 }  
+
+
 
 signed main()
 {

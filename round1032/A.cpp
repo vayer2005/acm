@@ -156,36 +156,23 @@ int C(int n, int k)
 
 void solve()
 {
-    int w, h, a, b, x1,y1,x2,y2;
-    cin >> w >> h >> a >> b >> x1 >> y1 >> x2 >> y2;
+    int n, s;
+    cin >> n >> s;
 
-    if (x1 > x2) {
-        swap(x1,x2);
+    int a[n];
+
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    int xovr = x2 - (x1 + a);
 
-    if (y1 > y2) {
-        swap(y1,y2);
-    }
+    int mt = abs(s-a[0]);
+    mt = min(mt, abs(s-a[n-1]));
 
-    int yovr = y2 - (y1 + b);
+    cout << mt + a[n-1]-a[0] << endl;
 
-    if (xovr < 0 && yovr % b != 0) {
-        cout << "NO\n";
-        return;
-    } else if (yovr<0 && xovr % a != 0) {
-        cout << "NO\n";
-        return;
-    } else {
-        if (xovr % a != 0 && yovr % b != 0) {
-            cout << "NO\n";
-            return;
-        }
-    }
 
-    cout << "YES\n";
-    return;
+
 }  
 
 signed main()
