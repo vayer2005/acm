@@ -55,6 +55,7 @@
         "queue": "cpp",
         "list": "cpp",
         "set": "cpp",
-        "parity-cpp": "cpp"
+        "parity-cpp": "cpp",
+        "fstream": "cpp"
     }
 }
