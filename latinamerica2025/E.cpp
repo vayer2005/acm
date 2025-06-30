@@ -24,19 +24,19 @@ int main() {
     int L = 0, R = n - 1, cur = 1;
 
     while (L <= R) {
-        if (a[L] == cur) { ++L; ++cur; continue; }
-        if (a[R] == cur) { --R; ++cur; continue; }
+        if (a[L] == cur) { ++L; ++cur; continue;}
+        if (a[R] == cur) { --R; ++cur; continue;}
 
-        if (a[L] && a[R]) { cout << "*\n"; return 0; } 
+        if (a[L] && a[R]) { cout << "*\n"; return 0;} 
 
         if (a[L]) {               
-            if (seen[cur]) { cout << "*\n"; return 0; }
-            a[R] = cur;  seen[cur] = 1;  
+            if (seen[cur]) { cout << "*\n"; return 0;}
+            a[R] = cur;  
             --R; ++cur; continue;
         }
         if (a[R]) {                 
-            if (seen[cur]) { cout << "*\n"; return 0; }
-            a[L] = cur;  seen[cur] = 1;  
+            if (seen[cur]) { cout << "*\n"; return 0;}
+            a[L] = cur;  
             ++L; ++cur; continue;
         }
 
@@ -57,15 +57,14 @@ int main() {
             }
         }
         if (putLeft) {
-            a[L] = cur;  seen[cur] = 1;  
+            a[L] = cur;   
             ++L;
         } else {
-            a[R] = cur;  seen[cur] = 1; 
+            a[R] = cur;  
             --R;
         }
         ++cur;
     }
-
     for (int i = 0; i < n; ++i) {
         if (i) cout << ' ';
         cout << a[i];
