@@ -24,6 +24,7 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 vector<int> lp, sieve;
+map<int,int> pval;
 vector<int> pr;
 vector<int> power;
 vector<int> fact(2e5 + 5, 0);
@@ -45,33 +46,7 @@ void initFactorial()
         fact[i] = (fact[i - 1] * i) % mod;
     }
 }
-void calc_sieve()
-{
-    sieve.resize(NUM + 1, 0);
-    for (int x = 2; x <= NUM; x++)
-    {
-        if (sieve[x])
-            continue;
-        for (int u = x; u <= NUM; u += x)
-        {
-            sieve[u] = x;
-        }
-    }
-}
-void primefactor()
-{
-    lp.resize(N + 1, 0);
-    for (int i = 2; i <= N; ++i)
-    {
-        if (lp[i] == 0)
-        {
-            lp[i] = i;
-            pr.push_back(i);
-        }
-        for (int j = 0; j < (int)pr.size() && pr[j] <= lp[i] && i * pr[j] <= N; ++j)
-            lp[i * pr[j]] = pr[j];
-    }
-}
+
 
 int gcd(int a, int b)
 {
@@ -90,23 +65,37 @@ int lcm(int a, int b)
 void solve()
 {   
     int n;
-    
     cin >> n;
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> b[i];
+    int x;
+    vector<int> cnt(2750132,0);
+    for (int i = 0; i < 2*n; i++) {
+        cin >> x;
+        cnt[x]++;
     }
 
-    int l = 1;
-    for (int i = 0;i < n-1; i++) {
-        if (b[i+1] % b[i] != 0) {
-            int g = gcd(b[i+1], b[i]);
-            int tempx = b[i]/g;
-            l = lcm(l, tempx);
+    vector<int> a;
+
+    for (int i = 2750131; i>=1; i--) {
+        while (cnt[i] > 0) {
+            if (sieve[i] == 0) {
+                //largest is prime
+                a.pb(pval[i]);
+                cnt[pval[i]]--;
+                cnt[i]--;
+            } else {
+                //cout << i << " " << sieve[i] << endl;
+                int vr = sieve[i];
+                a.pb(i);
+                cnt[vr]--;
+                cnt[i]--;
+            }
         }
     }
 
-    cout << l << endl;
+    for (int x : a) {
+        cout << x << " ";
+    }
+    cout << endl;
 
 
 }  
@@ -115,10 +104,22 @@ signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;
-    cin >> t;
+
+    sieve.resize(2750132);
+    fill(sieve.begin(), sieve.end(), 0);
+
+    sieve[0] = 1; sieve[1]=1;
+    int indc = 1;
+    for (int i = 2; i <= 2750131; i++) {
+        if (sieve[i] == 0) {
+            pval[i] = indc;
+            indc++;
+        } 
+        for (int j = i + i; j <= 2750131; j+=i) {
+            sieve[j] = i;
+        }
+    }
     
-    while (t--)
-        solve();
+    solve();
     return 0;
 }

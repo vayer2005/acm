@@ -89,26 +89,9 @@ int lcm(int a, int b)
 
 void solve()
 {   
-    int n;
     
-    cin >> n;
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> b[i];
-    }
 
-    int l = 1;
-    for (int i = 0;i < n-1; i++) {
-        if (b[i+1] % b[i] != 0) {
-            int g = gcd(b[i+1], b[i]);
-            int tempx = b[i]/g;
-            l = lcm(l, tempx);
-        }
-    }
-
-    cout << l << endl;
-
-
+    
 }  
 
 signed main()

@@ -24,6 +24,7 @@ const int N = 2e5+5;
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
 
 vector<int> lp, sieve;
+map<int,int> pval;
 vector<int> pr;
 vector<int> power;
 vector<int> fact(2e5 + 5, 0);
@@ -45,33 +46,7 @@ void initFactorial()
         fact[i] = (fact[i - 1] * i) % mod;
     }
 }
-void calc_sieve()
-{
-    sieve.resize(NUM + 1, 0);
-    for (int x = 2; x <= NUM; x++)
-    {
-        if (sieve[x])
-            continue;
-        for (int u = x; u <= NUM; u += x)
-        {
-            sieve[u] = x;
-        }
-    }
-}
-void primefactor()
-{
-    lp.resize(N + 1, 0);
-    for (int i = 2; i <= N; ++i)
-    {
-        if (lp[i] == 0)
-        {
-            lp[i] = i;
-            pr.push_back(i);
-        }
-        for (int j = 0; j < (int)pr.size() && pr[j] <= lp[i] && i * pr[j] <= N; ++j)
-            lp[i * pr[j]] = pr[j];
-    }
-}
+
 
 int gcd(int a, int b)
 {
@@ -85,28 +60,16 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
-
+int n;
 
 void solve()
 {   
-    int n;
-    
-    cin >> n;
-    int b[n];
+    int a[n];
     for (int i = 0; i < n; i++) {
-        cin >> b[i];
+        cin >> a[i];
     }
 
-    int l = 1;
-    for (int i = 0;i < n-1; i++) {
-        if (b[i+1] % b[i] != 0) {
-            int g = gcd(b[i+1], b[i]);
-            int tempx = b[i]/g;
-            l = lcm(l, tempx);
-        }
-    }
-
-    cout << l << endl;
+    
 
 
 }  
@@ -115,10 +78,13 @@ signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
+    int q; 
+    cin >> q >> n;
+
+    while (q--) {
         solve();
+    }
+    
+    
     return 0;
 }

@@ -89,25 +89,66 @@ int lcm(int a, int b)
 
 void solve()
 {   
-    int n;
+    int n, k;
     
-    cin >> n;
+    cin >> n >> k;
+    int a[n];
     int b[n];
     for (int i = 0; i < n; i++) {
-        cin >> b[i];
+        cin >> a[i];
+        b[i] = a[i];
     }
+    if (k ==1 ){
+        cout << "YES\n";
+        return;
+    }
+    sort(a, a+n);
+    int val = a[k-2];
 
-    int l = 1;
-    for (int i = 0;i < n-1; i++) {
-        if (b[i+1] % b[i] != 0) {
-            int g = gcd(b[i+1], b[i]);
-            int tempx = b[i]/g;
-            l = lcm(l, tempx);
+    //cout << val << endl;
+    vector<int> rem;
+    for (int x : b){
+        if ( x <= val) {
+            rem.pb(x);
         }
     }
+    
+    /*
+    for (int x : rem) {
+        cout << x << " ";
+    }
+    cout << endl;
+    */
 
-    cout << l << endl;
+   int bunked = 0;
+   int tot = rem.size();
 
+    int l = 0; int r=rem.size()-1;
+    //cout << r << endl;
+    while (l < r) {
+        if (rem[l] != rem[r]) {
+            if (rem[l] == val) {
+                l++;
+                bunked++;
+            } else if(rem[r] == val) {
+                r--;
+                bunked++;
+            } else {
+                cout << "NO\n";
+                return;
+            }
+        } else {
+            l++;
+            r--;
+        }
+    }
+    if (tot-bunked < k-1) {
+        cout << "NO\n";
+        return;
+    }
+    cout << "YES\n"; return;
+    
+    
 
 }  
 
