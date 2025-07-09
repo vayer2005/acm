@@ -86,41 +86,67 @@ int lcm(int a, int b)
 }
 
 
+vector<int> dsu(1001,-1);
+int spare = 0;
+
+int findPar(int x) {
+    int l = x;
+    vector<int> path;
+    while (dsu[l] > 0) {
+        path.pb(l);
+        l = dsu[l];
+    }
+
+    for (int y : path) {
+        dsu[y] = l;
+    }
+    return l;
+}
+
+void merge(int x, int y) {
+    int p1 = findPar(x);
+    int p2 = findPar(y);
+    if (p1 == p2) {
+        spare++;
+    } else {
+        if (p1 < p2) swap(p1, p2);
+        int tsize = dsu[p2];
+        dsu[p2] = p1;
+        dsu[p1] += tsize;
+    }
+}
 
 void solve()
 {   
-    int n; cin >> n;
-    int a[n];
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
-    }
+    //fill(dsu.begin(), dsu.end(), -1);
+    int n, d;
+    cin >> n >> d;
 
-    int l = 1; int r = n;
-
-    while (l <= r) {
-        int k = (l + r)/2;
-
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
+    int x, y;
+    for (int z = 0; z < d; z++) {
+        cin >> x >> y;
+        merge(x, y);
+        /*
+        for (int i = 1; i <= n; i++) {
+            cout << dsu[i] << " ";
+        }*/
+        //cout << endl;
+        vector<int> sizes;
+        for (int i = 1; i <= n; i++) {
+            if (dsu[i] < 0) {
+                sizes.pb(-1 * dsu[i]);
             }
         }
-
-        if (v >= k) {
-            l = k+1;
-        } else {
-            r = k-1;
+        sort(sizes.begin(), sizes.end());
+        reverse(sizes.begin(), sizes.end());
+        int tot = 0;
+        for (int i = 0; i < spare+1; i++) {
+            tot += sizes[i];
         }
+
+       cout << tot -1 << endl;
+
     }
-
-    cout << r << endl;
-
     
 }  
 
@@ -128,10 +154,6 @@ signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
+    solve();
     return 0;
 }

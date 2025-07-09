@@ -85,43 +85,69 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
+int dp[100001][2];
+int lr[100001][2];
+map<int,vector<int>> adj;
 
+void dfs(int v, int p) {
+
+    for (int x : adj[v]) {
+        if (x != p) {
+            dfs(x,v);
+            dp[v][0] += max(abs(lr[v][0] - lr[x][0]) + dp[x][0], abs(lr[v][0] - lr[x][1]) + dp[x][1]);
+            dp[v][1] += max(abs(lr[v][1] - lr[x][0]) + dp[x][0], abs(lr[v][1] - lr[x][1]) + dp[x][1]);  
+        }
+    }
+}
 
 void solve()
 {   
     int n; cin >> n;
+
     int a[n];
     int b[n];
+    int tsum = 0;
+    int sqsum = 0;
     for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
+        cin >> a[i];
+        tsum += a[i];
+        sqsum += a[i] * a[i];
+    }
+    for (int i = 0; i < n; i++) {
+        cin >> b[i]; 
+        tsum += b[i];
+        sqsum += b[i] * b[i];
     }
 
-    int l = 1; int r = n;
-
-    while (l <= r) {
-        int k = (l + r)/2;
-
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
-            }
-        }
-
-        if (v >= k) {
-            l = k+1;
-        } else {
-            r = k-1;
-        }
-    }
-
-    cout << r << endl;
+    int dp[10001][n];
+    memset(dp,0, sizeof(dp));
 
     
+    dp[a[0]][0] = 1;
+    dp[b[0]][0] = 1;
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j < 10001; j++) {
+            if (dp[j][i-1]) {
+                dp[j+a[i]][i] = 1;
+                dp[j+b[i]][i] = 1;
+            }
+        }
+    }
+
+    int minTot = 1e18;
+
+    for (int i = 0; i < 10001; i++) {
+        //a sum, and b sum given. calc min cost
+        if (dp[i][n-1]) {
+            int asum = i;
+            int bsum = tsum - i;
+            minTot = min(minTot, asum*asum + bsum*bsum);
+        }
+    }
+    cout << minTot + (n-1)*(sqsum) -sqsum << endl;
+    
+
 }  
 
 signed main()
@@ -130,8 +156,6 @@ signed main()
     cin.tie(0);
     int t;
     cin >> t;
-    
-    while (t--)
-        solve();
+    while (t--) {solve();}
     return 0;
 }

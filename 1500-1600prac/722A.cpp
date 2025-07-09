@@ -85,43 +85,48 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
+int dp[100001][2];
+int lr[100001][2];
+map<int,vector<int>> adj;
 
+void dfs(int v, int p) {
+
+    for (int x : adj[v]) {
+        if (x != p) {
+            dfs(x,v);
+            dp[v][0] += max(abs(lr[v][0] - lr[x][0]) + dp[x][0], abs(lr[v][0] - lr[x][1]) + dp[x][1]);
+            dp[v][1] += max(abs(lr[v][1] - lr[x][0]) + dp[x][0], abs(lr[v][1] - lr[x][1]) + dp[x][1]);  
+        }
+    }
+}
 
 void solve()
 {   
-    int n; cin >> n;
-    int a[n];
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
+    memset(dp, 0, sizeof(dp));
+    adj.clear();
+    int n;
+    cin >> n;
+    int l, r;
+    for (int i = 1; i <= n; i++) {
+        cin >> l >> r;
+        lr[i][0] = l;
+        lr[i][1] = r;
     }
 
-    int l = 1; int r = n;
-
-    while (l <= r) {
-        int k = (l + r)/2;
-
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
-            }
-        }
-
-        if (v >= k) {
-            l = k+1;
-        } else {
-            r = k-1;
-        }
+    int u, v;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
 
-    cout << r << endl;
+    dfs(1, -1);
 
-    
+    cout << max(dp[1][0], dp[1][1]) << endl;
+
+
+
+
 }  
 
 signed main()
@@ -130,8 +135,6 @@ signed main()
     cin.tie(0);
     int t;
     cin >> t;
-    
-    while (t--)
-        solve();
+    while (t--) {solve();}
     return 0;
 }

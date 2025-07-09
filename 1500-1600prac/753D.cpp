@@ -86,41 +86,95 @@ int lcm(int a, int b)
 }
 
 
+vector<int> dsu(1001,-1);
+int spare = 0;
+
+int findPar(int x) {
+    int l = x;
+    vector<int> path;
+    while (dsu[l] > 0) {
+        path.pb(l);
+        l = dsu[l];
+    }
+
+    for (int y : path) {
+        dsu[y] = l;
+    }
+    return l;
+}
+
+void merge(int x, int y) {
+    int p1 = findPar(x);
+    int p2 = findPar(y);
+    if (p1 == p2) {
+        spare++;
+    } else {
+        if (p1 < p2) swap(p1, p2);
+        int tsize = dsu[p2];
+        dsu[p2] = p1;
+        dsu[p1] += tsize;
+    }
+}
 
 void solve()
 {   
-    int n; cin >> n;
-    int a[n];
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
+    int n,m;cin >> n >> m;
+
+    string s;
+    cin >> s;
+
+    string rl="";
+    string ud="";
+    for (char c : s) {
+        if (c == 'L' || c == 'R') rl+=c;
+        else ud+=c;
     }
 
-    int l = 1; int r = n;
-
-    while (l <= r) {
-        int k = (l + r)/2;
-
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
-            }
-        }
-
-        if (v >= k) {
-            l = k+1;
+    int minh = 0; int maxh = 0;
+    int curr = 0;
+    for (char c : rl) {
+        if (c == 'R') {
+            curr+= 1;
+            maxh = max(maxh, curr);
         } else {
-            r = k-1;
+            curr-=1;
+            minh = min(minh, curr);
+        }
+
+        if (maxh-minh >= m) {
+            if (c == 'R') maxh-=1;
+            else minh+=1;
+            break;
         }
     }
 
-    cout << r << endl;
+    int finC = 0-minh;
 
+
+    int minv = 0; int maxv = 0;
+    curr = 0;
+    for (char c : ud) {
+        if (c == 'D') {
+            curr+= 1;
+            maxv = max(maxv, curr);
+        } else {
+            curr-=1;
+            minv = min(minv, curr);
+        }
+
+        if (maxv-minv >= n) {
+            if (c == 'D') maxv-=1;
+            else minv+=1;
+            break;
+        }
+    }
+
+    int finR = 0-minv;
+
+    cout << finR+1 << " " << finC+1 << endl;
+
+
+    
     
 }  
 
@@ -128,10 +182,7 @@ signed main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;
-    cin >> t;
-    
-    while (t--)
-        solve();
+    int t;cin >> t;
+    while (t--) solve();
     return 0;
 }

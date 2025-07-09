@@ -89,38 +89,87 @@ int lcm(int a, int b)
 
 void solve()
 {   
-    int n; cin >> n;
-    int a[n];
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
+    int n;
+    cin >> n;
+    int a[n+1];
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
     }
 
-    int l = 1; int r = n;
+    set<int> seen;
+    set<int> nog;
+    int b[n+1];
 
-    while (l <= r) {
-        int k = (l + r)/2;
+    int tot = 0;
+    for (int i = 1; i <= n; i++) {
+        if (seen.find(a[i]) != seen.end()) {
+            nog.insert(i);
+        } else {
+            seen.insert(a[i]);
+            b[i] = a[i];
+            tot++;
+        }
+    }
 
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
+    set<int> nin;
+    for (int i = 1; i <= n; i++) {
+        if (seen.find(i) == seen.end()) {
+            nin.insert(i);
+        }
+    }
+
+    cout << tot << endl;
+    if (nin.size() == 0) {
+        for (int i = 1; i <= n; i++) {
+            cout << a[i] << " ";
+        }
+        cout << endl;
+        return;
+    }
+
+
+    while (nog.size() > 0 || nin.size() > 0) {
+        if (nin.size() == 1 && *nin.begin() == *nog.begin()) {
+            int curr = *nin.begin();
+            for (int i = 1; i <= n; i++) {
+                if (nog.find(i) == nog.end() && a[curr]==b[i]) {
+                    int dest = b[i];    
+                    b[i] = curr;
+                    b[curr] = dest;
+                    break;
+                }
+            }
+            for (int i  =1; i <= n; i++) {
+                cout << b[i] << " ";
+            }
+            cout << endl;
+            return;
+        }
+        
+        int currNog = *nog.begin();
+        bool matched = false;
+
+        vector<int> add;
+        while (!matched) {
+            int currNin = *nin.begin();
+            nin.erase(currNin);
+            if (currNin != currNog) {
+                b[currNog] = currNin;
+                matched = true;
+                nog.erase(currNog);
+            } else {
+                add.pb(currNin);
             }
         }
-
-        if (v >= k) {
-            l = k+1;
-        } else {
-            r = k-1;
+        for (int x : add) {
+            nin.insert(x);
         }
     }
 
-    cout << r << endl;
-
+    for (int i = 1; i <= n; i++) {
+        cout << b[i] << " "; 
+    }
+    cout << endl;
     
 }  
 
@@ -130,8 +179,6 @@ signed main()
     cin.tie(0);
     int t;
     cin >> t;
-    
-    while (t--)
-        solve();
+    while (t--) {solve();}
     return 0;
 }

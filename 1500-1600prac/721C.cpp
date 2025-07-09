@@ -89,38 +89,27 @@ int lcm(int a, int b)
 
 void solve()
 {   
-    int n; cin >> n;
+    int n;
+    cin >> n;
     int a[n];
-    int b[n];
     for (int i = 0; i < n; i++) {
-        cin >> a[i] >> b[i];
+        cin >> a[i];
     }
 
-    int l = 1; int r = n;
-
-    while (l <= r) {
-        int k = (l + r)/2;
-
-        int maxsm = 0;
-        int minb = k-1;
-        int v=0;
-        for (int i = 0; i<n; i++) {
-            if (a[i] >= minb && b[i] >= maxsm) {
-                v++;
-                minb-=1;
-                maxsm+=1;
-            }
+    vector<int> dp(n,0);
+    map<int,int> val;
+    int tot = 0;
+    for (int i =0; i< n;i++) {
+        if (i > 0) dp[i] = dp[i-1];
+        if (val.count(a[i])) {
+            dp[i] += val[a[i]];
         }
 
-        if (v >= k) {
-            l = k+1;
-        } else {
-            r = k-1;
-        }
+        val[a[i]] += i+1;
+        tot+=dp[i];
     }
 
-    cout << r << endl;
-
+    cout << tot << endl;
     
 }  
 
@@ -130,8 +119,6 @@ signed main()
     cin.tie(0);
     int t;
     cin >> t;
-    
-    while (t--)
-        solve();
+    while (t--) {solve();}
     return 0;
 }
