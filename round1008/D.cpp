@@ -90,7 +90,101 @@ int lcm(int a, int b)
 
 void solve()
 {   
-    
+    string s;
+    cin >> s;
+
+    int strt = 0; int stp = s.size()-1;
+
+    while (strt < stp) {
+        if (s[strt] != s[stp]) {
+            break;
+        }
+        strt++;
+        stp--;
+    }
+
+    if (strt > stp) {
+        cout << "0\n";
+        return;
+    }
+
+    int l = 2; int r = s.size()-1;
+    int ans=r;
+    while (l <= r) {
+        int mid = (l+r)/2;
+
+        if (strt + mid-1 >= stp-mid+1) {
+            int splitoff = strt + mid;
+            vector<int> occr(26,0);
+            bool wrk1 = true;
+            for (int i = stp; i >= splitoff; i--) {
+                occr[s[i]-'a']++;
+            }
+
+            for (int i = strt; i < splitoff; i++) {
+                occr[s[i]-'a']--;
+            }
+            for (int i = 0; i < 26; i++) {
+                if (occr[i] > 0) {
+                    wrk1 = false;
+                }
+            }
+
+            bool wrk2 = true;
+            splitoff = stp-mid+1;
+            vector<int> occr2(26,0);
+            for (int i = strt; i < splitoff; i++) {
+                occr2[s[i]-'a']++;
+            }
+            for(int i = stp; i >= splitoff; i--) {
+                occr2[s[i]-'a']--;
+            }
+            for (int i = 0; i < 26; i++) {
+                if (occr2[i] > 0) {
+                    wrk2 = false;
+                }
+            }
+
+            if (wrk1 || wrk2) {
+                ans = min(ans, mid);
+                r = mid-1;
+            } else {
+                l = mid +1;
+            }
+            continue;
+        }
+        int i = strt+mid;
+        int j = stp-mid;
+        bool works=true;
+        while (i < j) {
+            if (s[i] != s[j]) {
+                works = false;
+                break;
+            }
+            i++;j--;
+        }
+
+        vector<int> appr(26,0);
+        for (int i = strt; i < strt+mid; i++) {
+            appr[s[i]-'a']++;
+        }
+        for (int i = stp; i > stp-mid; i--) {
+            appr[s[i]-'a']--;
+        }
+
+        for (int i = 0; i < 26; i++) {
+            if (appr[i] != 0) works=false;
+        }
+
+        if (works) {
+            ans = min(ans, mid);
+            r=mid-1;
+        } else {
+            l = mid+1;
+        }
+    }
+
+    cout << ans << endl;
 
 
 }  
