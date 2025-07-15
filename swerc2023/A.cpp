@@ -44,9 +44,7 @@ int lis(vector<string>& vec, string order) {
             ans.push_back(arr[i]);
         }
         else {
-            int low = lower_bound(ans.begin(), ans.end(),
-                                  arr[i])
-                      - ans.begin();
+            int low = lower_bound(ans.begin(), ans.end(),arr[i]) - ans.begin();
             ans[low] = arr[i];
         }
     }
