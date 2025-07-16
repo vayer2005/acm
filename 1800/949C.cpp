@@ -7,7 +7,7 @@ using namespace std;
 #define pb push_back
 #define ppb pop_back
 #define mp make_pair
-#define int long long
+//#define int long long
 using vpi = vector<pair<int, int>>;
 using pi = pair<int, int>;
 using vi = vector<int>;
@@ -85,7 +85,7 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
  
-
+ 
 void solve()
 {   
     int n; cin >> n;
@@ -93,49 +93,16 @@ void solve()
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
-
-    bool path0=false;
-    bool path1 = false;
-    
-
-    int sub = 0;
-    for (int i = 0; i < n; i++) {
-        if (a[i] == 0) {
-            sub += 1;
-            path0 = false;
-            path1 = false;
-            continue;
-        }
-        if (path0 || path1) {
-            if (a[i] <= 2) {
-                if (path0 && i % 2 ==1) {
-                    sub+=1;
-                    path0 = false;
-                    path1=false;
-                    continue;
-                } else if (path1 && i%2 == 0){
-                    sub+=1;
-                    path0 = false;
-                    path1=false;
-                    continue;
-                }
-                if (i%2 == 0) path0 = true;
-                else path1 = true;
-            } else if (a[i] > 4) {
-                path0 = false;
-                path1 = false;
-                continue;
-            }
-        } else {
-            if (a[i] <= 2) {
-                if (i%2 == 0){
-                    path0 = true;
-                } else path1 = true;
+    for (int i = 0; i < n-1; i++) {
+        if (a[i] != -1 && a[i+1] != -1) {
+            if(a[i] != a[i+1]/2 || a[i+1] != a[i]/2) {
+                cout << "-1\n";
+                return;
             }
         }
     }
+    //Todo
 
-    cout << n - sub << endl;
 }  
  
 signed main()
