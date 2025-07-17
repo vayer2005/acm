@@ -86,45 +86,65 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
+    int n;
+    cin >> n;
+    int p[n];
+    int s[n];
 
-    
-
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
+    for (int i = 0; i < n; i++) {
+        cin >> p[i];
     }
 
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
-
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
-        }
-
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
+    for (int i = 0; i < n; i++) {
+        cin >> s[i];
     }
 
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
+    if (p[n-1] !=  s[0]) {
+        cout << "NO\n";
+        return;
+    }
+
+    for (int i = 1; i < n; i++) {
+        if (p[i-1] % p[i] != 0) {
+            cout << "NO\n";
             return;
         }
     }
 
-    
+    for (int i = n-1; i >= 1; i--) {
+        if (s[i] % s[i-1] != 0) {
+            cout << "NO\n";
+            return;
+        }
+    }
+
+    vector<int> a;
+    for (int i = 0; i < n; i++) {
+        a.pb(lcm(p[i], s[i]));
+    }
+
+    int g = a[0];
+    for (int i = 1; i < n; i++) {
+        g = gcd(g, a[i]);
+        if (g != p[i]) {
+            cout << "NO\n";
+            return;
+        }
+        
+    }
+
+    g = a[n-1];
+    for (int i = n-2; i >= 0; i--) {
+        g=gcd(g, a[i]);
+        if (g != s[i]) {
+            cout << "NO\n";
+            return;
+        }
+    }
+
+    cout << "YES\n";
+
+
 }
  
 

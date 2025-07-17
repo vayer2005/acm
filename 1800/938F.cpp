@@ -86,43 +86,35 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
 
-    
+    int ans = 0;
+    ans += d/2;
 
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
-    }
+    int p1 = a&1; int p2 =  b&1; int p3 = c&1;
 
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
-
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
+    if (p1 == 0 || p2==0 || p3 == 0) {
+        if (p1&1) a--;
+        if (p2&1) b--;
+        if (p3&1) c--;
+        
+        ans += (a + b + c)/2;
+    } else {
+        if (p1 == p2 && p2 == p3) {
+            
+        } else if (p1 == p2) {
+            c--;
+        } else if (p1 != p2 && p1 == p3) {
+            b--;
+        } else {
+            a--;
         }
 
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
+        ans += (a + b + c)/2;
     }
 
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
-            return;
-        }
-    }
+    cout << ans << endl;
 
     
 }

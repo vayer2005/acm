@@ -86,45 +86,37 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
-
-    
-
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
-    }
-
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
-
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
+    int n, k;
+    cin >> n >> k;
+    int pref = 0;
+    vector<int> res;
+    bool found = false;
+    int i = 0;
+    while (pref < n) {
+        i = pref+1;
+        if (i == k) i++;
+        int mn = i;
+        int mx=  i+pref;
+        if (k>=mn && k <= mx) {
+            res.pb(k-pref-1);
+        } else {
+            res.pb(i);
         }
-
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
+        pref+= (res.back());
     }
-
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
-            return;
+    
+    int sz = res.size();
+    for (int i = 0; i < sz && res.size() < 25; i++) {
+        if (res[i] > k) {
+            res.pb(res[i] + k);
         }
     }
 
-    
+    cout << res.size() << endl;
+    for (int x : res) {
+        cout << x << " ";
+    }
+    cout << endl;    
 }
  
 

@@ -86,45 +86,16 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
-
-    
-
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
+    int n; cin >> n;
+    vector<int> dig;
+    while (n >= 10) {
+        dig.pb(n%10);
+        n/=10;
     }
+    dig.pb(n);
 
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
-
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
-        }
-
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
-    }
-
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
-            return;
-        }
-    }
-
-    
+    sort(dig.begin(), dig.end());
+    cout << dig[0] << endl;
 }
  
 

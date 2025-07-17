@@ -86,44 +86,52 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
+    int n, k;
+    cin >> n >> k;
+
+    k--;
+    int a[n];
+    int maxH = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        maxH = max(maxH, a[i]);
+    }
+
+    if (a[k] == maxH) {
+        cout << "YES\n";
+        return;
+    }
+
+    int v = a[k];
+    vector<int> rest;
+    sort(a, a+n);
+    for (int i = 0; i < n; i++) {
+        if (a[i] > v) {
+            rest.pb(a[i]);
+        }
+    }
+    sort(rest.begin(), rest.end());
+    int lee = v;
+
+    int prev = v;
+
+    for (int i = 0; i < rest.size(); i++) {
+        if (rest[i] == prev) continue;
+        int diff = rest[i] - prev;
+        if (diff > lee) {
+            cout << "NO\n";
+            return;
+        } if (rest[i] == maxH) {
+            cout << "YES\n";
+            return;
+        } else {
+            prev = rest[i];
+        }
+    }
+
+    cout << "NO\n";
 
     
-
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
-    }
-
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
-
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
-        }
-
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
-    }
-
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
-            return;
-        }
-    }
-
     
 }
  

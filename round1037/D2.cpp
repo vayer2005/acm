@@ -86,45 +86,31 @@ int lcm(int a, int b)
 }
 
 void solve() {
-    int m, x;
-    cin >> m >> x;
+    int n, k;
+    cin >> n >> k;
 
-    
-
-    int c[m+1];
-    int h[m+1];
-    int mh = 0;
-    for (int i = 1; i <= m; i++) {
-        cin >> c[i] >> h[i];
-        mh+=h[i];
+    vector<vector<int>> gates;
+    int l, r, rl;
+    for (int i = 0; i < n; i++) {
+        cin >> l >> r >> rl;
+        gates.pb({l, r, rl});
     }
 
-    vector<int> dp(mh+1, 1e18);
-    vector<int>diff(mh+1,0);
-    dp[0] = 0;
+    sort(gates.begin(), gates.end());
 
-    for (int i = 1; i <= m; i++) {
-        int hap = h[i];
-        int cos = c[i];
-        for (int j = 0; j < mh+1; j++) {
-            diff[j] = dp[j];   
-            if (j - hap >= 0 && (dp[j-hap] + cos <= (i-1)*x)) {
-                diff[j] = min(diff[j], dp[j-hap] + cos);
-            }
-        }
+    int mn = k; int mx = k;
 
-        dp = diff;
-        fill(diff.begin(), diff.end(), 0);
-    }
+    for (int i = 0; i < n; i++) {
+        int cl = gates[i][0]; int cr = gates[i][1];
+        int rl = gates[i][2];
 
-    for (int i = mh; i >= 0; i--) {
-        if (dp[i] != 1e18) {
-            cout << i << endl;
-            return;
+        if (cl <= mx) {
+            mx = max(mx, rl);
         }
     }
 
-    
+    cout << mx << endl;
+
 }
  
 
