@@ -104,6 +104,7 @@ void solve() {
 
     sort(xInd.begin(), xInd.end(), [&](int a, int b) {
         return pts[a].first < pts[b].first;
+
     });
 
     sort(yInd.begin(), yInd.end(), [&](int a, int b) {

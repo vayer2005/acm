@@ -105,9 +105,7 @@ void solve() {
         }
         
     }
-
     cout << tot << endl;
-    
 }
  
 
