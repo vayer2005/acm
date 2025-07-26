@@ -85,14 +85,82 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
+int a[200001];
+map<int, pair<int,int>> parent; // node to its parent and edge weight;
+vector<pair<int,int>> adj[200001];
+map<int, map<int,int>> colors;
+int ans;
+
+void dfs(int v, int p) {
+
+    for (auto x : adj[v]) {
+        int node = x.first;
+        int weight = x.second;
+
+        if (node != p) {
+            parent[node] = {v, weight};
+            int c =  a[node];
+            colors[v][c] += weight;
+            if (c != a[v]) ans += weight;
+            dfs(node, v);
+        }
+    }
+    //cout << v << " " << ans << endl;
+}
+
 void solve() {
     int n, q;
     cin >> n >> q;
-
-    int a[n];
-    for (int i = 0; i < n; i++) {
+    ans = 0;
+    for (int i = 0; i < 200001; i++) {
+        adj[i].clear();
+        
+    }
+    colors.clear();
+    parent.clear();
+    
+    for (int i = 1; i <= n; i++) {
         cin >> a[i];
     }
+
+    int u, v, c;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v >> c;
+        adj[u].pb({v,c});
+        adj[v].pb({u,c});
+    }
+
+    dfs(1, 0);
+
+    //cout << a[1] << " "<< a[2] << " " << a[3] << " " << a[4] << endl;
+    while (q--) {
+        cin >> v >> c;
+
+        if (a[v] == c) {
+            cout << ans << endl;
+            continue;
+        }
+
+        int curr=a[v]; //current color
+
+        ans += colors[v][curr];
+        ans -= colors[v][c];
+
+        int p = parent[v].first;
+        int pcol = a[p];
+        int weight = parent[v].second;
+
+        if (pcol == curr) ans += weight;
+        else if (pcol == c) ans -= weight;
+        
+        colors[p][curr] -= weight;
+        colors[p][c] += weight;
+
+        a[v] = c;
+
+        cout << ans << endl;
+    }
+
 
     
 }

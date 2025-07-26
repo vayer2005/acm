@@ -14,7 +14,7 @@ void mul(matrix& ret, const matrix& a, const matrix& b) {
     for(int j = 0; j < ret[i].size(); j++) {
       for(int k = 0; k < b.size(); k++) {
         ret[i][j] += (a[i][k] * (int64_t)b[k][j]) % MOD;
-        if(ret[i][j] >= MOD) ret[i][j] -= MOD;
+        ret[i][j] %= MOD;
       }
     }
   }
@@ -66,10 +66,11 @@ int main() {
       if(dig != j) {
         int nmod = (mod + j);
         if(nmod >= 9) nmod -= 9;
-        iter[i][(10 * nmod) + j]++;
+        iter[i][(10 * nmod) + j]=1;
       }
     }
   }
+  
   pow(iter, iter, len - 2);
   int ret = 0;
   int ninemod = residue % 9;
