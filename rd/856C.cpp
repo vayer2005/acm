@@ -94,7 +94,25 @@ void solve() {
         cin >> a[i];
     }
 
-    
+    //
+    for (int i = 0; i < n; i++) {
+        int l = 0;
+        int r = i;
+
+        while (l <= r) {
+            int m = (l+r)/2;
+            int num=i-m+1;
+            if (a[m] >= num) {
+                r = m-1;
+            } else {
+                l = m+1;
+            }
+        }
+        cout << i-(r+1)+1 << " ";
+    }
+    cout << endl;
+
+
 }
  
 
