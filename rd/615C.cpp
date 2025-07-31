@@ -85,41 +85,47 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
-
 void solve() {
-    int n, w;cin >> n >> w;
+    int n; cin >> n;
+    int orig = n;
+    vector<int> pf;
 
-    multiset<int> heights;
+    while (n%2 == 0){
+        pf.pb(2);
+        n/=2;
+    } 
 
-    int x;
-    for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
-    }
-
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
+    for (int i = 3; i * i <= n; i+=2) {
+        while (n%i == 0) {
+            pf.pb(i);
+            n/=i;
         }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
-            }
-        }        
     }
 
-    cout << h << endl;
+    if (n > 2) {
+        pf.pb(n);
+    }
+
+    if (pf.size() < 3) {
+        cout << "NO\n";
+        return;
+    }
+
+    orig /= pf[0];
+    int f1 = pf[0];
+    for (int i = 2; i * i <= orig; i++) {
+        if (orig%i == 0) {
+            if (i != orig/i && i != f1 && orig/i != f1) {
+                cout << "YES\n";
+                cout << i << " " << f1 << " " << orig/i << endl;
+                return;
+            }
+        }
+    }
+
+    cout << "NO\n";
+    return;
+
 
 
 }
@@ -128,10 +134,9 @@ void solve() {
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
+
     int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    while(t--) solve();
     
     return 0;
 

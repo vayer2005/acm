@@ -87,51 +87,43 @@ int lcm(int a, int b)
 
 
 void solve() {
-    int n, w;cin >> n >> w;
+    int n; cin >> n;
+    int a[n];
+    int b[n];
 
-    multiset<int> heights;
-
-    int x;
     for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+        cin >> a[i];
     }
 
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
+    map<int,int> leave;
+    for (int i = 0; i < n; i++) {
+        cin >> b[i];
+        leave[b[i]] = i;
+    }
+
+    int c[n];
+    for (int i = 0; i < n; i++) {
+        c[i] = leave[a[i]];
+    }
+
+    int maxSeen = -1;
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        if (c[i] < maxSeen) {
+            ans++;
         }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
-            }
-        }        
+        maxSeen = max(maxSeen, c[i]);
     }
 
-    cout << h << endl;
-
-
+    cout << ans << endl;
+    
 }
  
 
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    solve();
     
     return 0;
 

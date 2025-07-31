@@ -87,40 +87,37 @@ int lcm(int a, int b)
 
 
 void solve() {
-    int n, w;cin >> n >> w;
+    string s;
+    cin >> s;
+    int n = s.size();
 
-    multiset<int> heights;
-
-    int x;
-    for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
-    }
-
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
+    int l = 0;
+    int r= 0;
+    int tot = 0;
+    while (l < n) {
+        while (r < n && s[l] == s[r]) {
+            r++;
         }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
+        r--;
+        char c = 'x';
+        int use;
+        if (r + 1 < n) c = s[r+1];
+
+        for (int i = 0; i < 26; i++) {
+            if (i+'a'!= c && i+'a' != s[l]) {
+                use = i;
+                break;
             }
-        }        
+        }
+
+        for (int i = l+1; i <= r; i+=2) {
+            s[i] = use+'a';
+        }
+        l = r+1;
+        r=l;
     }
 
-    cout << h << endl;
-
+    cout << s << endl;
 
 }
  
@@ -128,10 +125,7 @@ void solve() {
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    solve();
     
     return 0;
 

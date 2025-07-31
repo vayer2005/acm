@@ -87,51 +87,54 @@ int lcm(int a, int b)
 
 
 void solve() {
-    int n, w;cin >> n >> w;
+    int n, h; cin >> n >> h;
 
-    multiset<int> heights;
+    vector<int> a(n);
 
-    int x;
     for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+        cin >> a[i];
     }
 
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
+    int l = 0; int r = n;
+
+    int sol = 0;
+    while (l <=r) {
+        int m = (l+r)/2;
+
+        vector<int> tmp;
+        for (int i = 0; i < m; i++) {
+            tmp.pb(a[i]);
         }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
+        sort(tmp.begin(), tmp.end());
+
+        int used = 0;
+        if (m&1) {
+            used += tmp[0];
+            for (int i = 1; i < m-1; i+=2) {
+                used += tmp[i+1];
             }
-        }        
+        } else {
+            for (int i = 0; i < m-1; i+=2) {
+                used += tmp[i+1];
+            }
+        }
+
+        if (used <= h) {
+            sol = max(sol, m);
+            l = m+1;
+        } else {
+            r = m-1;
+        }
     }
 
-    cout << h << endl;
-
-
+    cout << sol << endl;
 }
  
 
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    solve();
     
     return 0;
 

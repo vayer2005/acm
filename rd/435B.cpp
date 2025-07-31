@@ -85,42 +85,48 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
+vector<int> adj[100001];
+vector<int> color(100001, -1);
+int tot = 0;
+int ans = 0;
+
+void dfs1(int v, int p) {
+    for (int x : adj[v]) {
+        if (x == p) continue;
+        color[x] = !color[v];
+        tot += color[x];
+        dfs1(x, v);
+    }
+}
+
+void dfs2(int v, int p) {
+    if (color[v] == 0) {
+        ans += tot - adj[v].size();
+    }
+    
+    for (int x : adj[v]) {
+        if (x == p) continue;
+        dfs2(x, v);
+    }
+}
+
 
 void solve() {
-    int n, w;cin >> n >> w;
+    int n;
+    cin >> n;
 
-    multiset<int> heights;
-
-    int x;
-    for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+    int u, v;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
 
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
-        }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
-            }
-        }        
-    }
+    color[1] = 0;
+    dfs1(1, -1);
+    dfs2(1, -1);
 
-    cout << h << endl;
-
+    cout << ans << endl;
 
 }
  
@@ -128,10 +134,7 @@ void solve() {
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    solve();
     
     return 0;
 

@@ -87,39 +87,34 @@ int lcm(int a, int b)
 
 
 void solve() {
-    int n, w;cin >> n >> w;
+    int n;
+    cin >> n;
+    int a[n];
 
-    multiset<int> heights;
-
-    int x;
     for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+        cin >> a[i];
     }
 
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
-        }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
-            }
-        }        
+    int tsum = 0;
+    map<int,int> occ;
+    for (int i = 0; i < n; i++) {
+        tsum += a[i];
+        occ[a[i]]++;
+    }
+    vi res;
+    for (int i = 0; i < n; i++) {
+        int lk = tsum - a[i];
+        if (lk&1) continue;
+        int l = lk/2;
+        if (occ[l] == 1 && a[i] == l) continue;
+        if (occ[l]) res.pb(i+1);
     }
 
-    cout << h << endl;
+    cout << res.size() << endl;
+    for (int x : res) {
+        cout << x << " ";
+    }
+    cout << endl;
 
 
 }
@@ -128,10 +123,7 @@ void solve() {
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    solve();
     
     return 0;
 

@@ -85,41 +85,48 @@ int lcm(int a, int b)
     return ((a / gcd(a, b)) * b);
 }
 
-
 void solve() {
-    int n, w;cin >> n >> w;
-
-    multiset<int> heights;
-
-    int x;
+    
+    int n;
+    cin >> n;
+    int a[n];
+    int tsum = 0;
     for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+        cin >> a[i];
+        tsum += a[i];
     }
 
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
+    multiset<int> pref;
+    pref.insert(0);
+
+    int p=0;
+    for (int i = 0; i < n-1; i++) {
+        p+= a[i];
+        int needed = p - tsum;
+        auto it = pref.lower_bound(needed);
+        if (it != pref.begin() || *it == needed) {
+            cout << "NO\n";
+            return;
         }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
-            }
-        }        
+        pref.insert(p);
+    }
+    
+    p = 0;
+    pref.clear();
+    pref.insert(0);
+
+    for (int i = 1; i < n; i++) {
+        p+= a[i];
+        int needed = p - tsum;
+        auto it = pref.lower_bound(needed);
+        if (it != pref.begin() || *it == needed) {
+            cout << "NO\n";
+            return;
+        }
+        pref.insert(p);
     }
 
-    cout << h << endl;
+    cout << "YES\n";
 
 
 }
@@ -128,10 +135,9 @@ void solve() {
 signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
+
     int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    while(t--) solve();
     
     return 0;
 

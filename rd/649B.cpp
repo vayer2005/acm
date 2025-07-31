@@ -87,40 +87,39 @@ int lcm(int a, int b)
 
 
 void solve() {
-    int n, w;cin >> n >> w;
-
-    multiset<int> heights;
-
-    int x;
+    int n; cin >> n;
+    int a[n];
     for (int i = 0; i < n; i++) {
-        cin >> x;
-        heights.insert(x);
+        cin >> a[i];
     }
-
-    int h = 0;
-    int left = w;
-    multiset<int> buf;
-    while (!heights.empty() || !buf.empty()) {
-        h+=1;
-        left = w; 
-        for (int x : buf) {
-            heights.insert(x);
-        }
-        buf.clear();
-        while (!heights.empty()) {
-            int mx = *heights.rbegin();
-            if (mx <= left) {
-                left -= mx;
-                heights.extract(mx);
-            } else {
-                heights.extract(mx);
-                buf.insert(mx);
+    
+    int l = 0; int r = 1;
+    vector<int> res;
+    res.pb(a[0]);
+    while (l < n && r < n) {
+        if (a[l] > a[r]) {
+            //decreasing
+            while (r < n && a[r] < a[r-1]) {
+                r+=1;
             }
-        }        
+            r--;
+            res.pb(a[r]);
+            l = r; r = l+1;
+        } else {
+            while (r < n && a[r] > a[r-1]) {
+                r+=1;
+            }
+            r--;
+            res.pb(a[r]);
+            l = r; r = l+1;
+        }
     }
 
-    cout << h << endl;
-
+    cout << res.size() << endl;
+    for (int x : res) {
+        cout << x << " ";
+    }
+    cout << endl;
 
 }
  
@@ -129,9 +128,7 @@ signed main() {
  ios_base::sync_with_stdio(false);
     cin.tie(0);
     int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    while(t--) solve();
     
     return 0;
 
