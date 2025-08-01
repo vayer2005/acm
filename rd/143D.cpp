@@ -23,6 +23,8 @@ const double EPS = 1e-9;
  
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
  
+
+
 vector<int> lp, sieve;
 vector<int> pr;
 vector<int> power;
@@ -72,7 +74,30 @@ void primefactor()
             lp[i * pr[j]] = pr[j];
     }
 }
- 
+int binpow(int a, int b)
+{
+    int res = 1;
+    while (b > 0)
+    {
+        if (b & 1)
+            res = res * a;
+        a = a * a;
+        b >>= 1;
+    }
+    return res;
+}
+int binpow(int a, int b, int mod)
+{
+    int res = 1;
+    while (b > 0)
+    {
+        if (b & 1)
+            res = (res * a) % mod;
+        a = (a * a) % mod;
+        b >>= 1;
+    }
+    return res % mod;
+}
 int gcd(int a, int b)
 {
     if (b == 0)
@@ -84,65 +109,54 @@ int lcm(int a, int b)
 {
     return ((a / gcd(a, b)) * b);
 }
-
+int inversemod(int a, int mod)
+{
+    return binpow(a, mod - 2, mod);
+}
+int divmod(int a, int b, int c)
+{
+    return ((a % c) * inversemod(b, c)) % c;
+}
+int C(int n, int k)
+{
+    if (k > n)
+        return 0;
+    int p1 = (fact[n] * inversemod(fact[k], mod)) % mod;
+    int p2 = (1 * inversemod(fact[n - k], mod)) % mod;
+    return (p1 * p2) % mod;
+}
 
 void solve() {
-    int n;
-    cin >> n;
+    int n;cin >> n;
 
-    int b[n];
-    for (int i = 0; i < n; i++) {
-        cin >> b[i];
+    int groups = n/3;
+
+    int a, b, c;
+
+    int mlt = 1;
+    for (int i = 0; i < n; i+=3) {
+        cin >> a >> b >> c;
+
+        vi r = {a+b, a+c, b+c};
+        sort(r.begin(), r.end());
+        int g = 1;
+        if (r[0] == r[2]) g = 3;
+        else if (r[1] == r[2]) g = 2;
+        mlt *= g;
+        mlt %= mod;
     }
 
-    vi a;
-    vi res;
-    for (int i = 0; i < n; i++) {
-        if (b[i] == 0) {
-            res.pb(0);
-        } else {
-            a.pb(b[i]);
-        }
-    }
+    mlt *= C(groups, groups/2);
+    mlt %= mod;
 
-    if (a.size() == 0) {
-        cout << "No\n";
-        return;
-    }
-
-    sort(a.begin(), a.end());
-    int l = 1; int r = a.size()-1;
-    int sz = a.size()-1;
-    int range = a[a.size()-1] - a[0];
-    int rsum = a[0];
-    res.pb(a[0]);
-
-    while (l <= r) {
-        if (rsum < 0) {
-            rsum+=a[r];
-            res.pb(a[r]);
-            r--;
-        } else {
-            rsum +=a[l];
-            res.pb(a[l]);
-            l++;
-        }
-    }
-
-    cout << "Yes\n";
-    for (int x : res) {
-        cout << x << " ";
-    }
-    cout << endl;
+    cout << mlt << endl;
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) {
-        solve();
-    }
+    initFactorial();
+    solve();
     
     return 0;
 
