@@ -126,54 +126,34 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-int nxt(int v, int n) {
-    int msig = -1;
-    for (int i = 0; i < 63; i++) {
-        if ((v >> i) & 1) msig = i;
-    }
-    int i = msig;
-    int pref = (n >> i) & 1;
-    while (pref) {
-        i++;
-        pref = (n >> i) & 1;
-    }
-    int fin = ((n >> i) << i) | (1LL << i); 
-    return fin;
-}
-
 
 void solve() {
-    int n, x;
-    cin >> n >> x;
-    int minNeeded = n;
-    int maxNeeded = -1;
-    for (int i = 0; i < 63; i++) {
-        int xb = (x >> i) & 1;
-        int nb = (n >> i) & 1;
-        if (xb == 1 && nb == 0) {
-            cout << "-1\n";
-            return;
-        }
-        else if (xb == 1 && nb == 1) {
-            int arg = (1LL << i);
-            int vl = nxt(arg, n)-1;
-            if (maxNeeded == -1) maxNeeded = vl;
+    
+    int n;
+    cin >> n;
+    int a[n+1];
 
-            else maxNeeded = min(maxNeeded, vl);
-        } else if (xb == 0 && nb == 1) {
-            int arg = (1LL << i);
-            int vl = nxt(arg, n);
-            minNeeded = max(minNeeded, vl);
-        } 
+    for (int i = 1; i <= n; i++ ) {
+        cin >> a[i];
     }
 
-    if (maxNeeded != -1 && minNeeded > maxNeeded) {
-        cout << "-1\n";
+    vector<int> dp(n+1,0);
+
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        if (dp[i-1] == 1 && i + a[i] <= n) {
+            dp[i+a[i]] = 1;
+        } 
+        if (i - a[i]-1 >= 0 && dp[i-a[i]-1] == 1) {
+            dp[i] = 1;
+        }  
+    }
+
+    if (dp[n] == 1) {
+        cout << "YES\n";
         return;
     }
-
-    cout << minNeeded << endl;
-
+    cout << "NO\n";
 
 }
 
