@@ -16,7 +16,7 @@ using vvi = vector<vector<int>>;
 #define ss second
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
-const int mod = 1e9+7;
+const int mod = 998244353;
 const int NUM = 1000030;
 const int N = 2e5+5;
 const double EPS = 1e-9;
@@ -127,65 +127,66 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-bool lex(string a, string b) {
-    for (int i = 0; i < a.size(); i++) {
-        if (a[i] < b[i]) {
-            return true;
-        } else if(b[i] < a[i]) {
-            return false;
-        } 
-    }
-    return false;
-}
-
 
 void solve() {
+    int n;
+    cin >> n;
+    if (n == 1) {
+        cout << "! 1\n";
+        return;
+    }
 
-    int n, k; cin >> n >> k;
+    int srch, v1, v2;
+    cout << "? 1 2\n";
+    cout.flush();
+    cin >> v1; 
+    cout << "? 2 1\n";
+    cout.flush();
+    cin >> v2;
 
-    int dp[n][k+1];
-
-    memset(dp, 0, sizeof(dp));
-
-    dp[0][k] = 1;
-
-    int idx = k-1;
-    bool forw = true;
-    while (idx >= 1) {
-        if (forw) {
-            int psum = dp[0][idx+1] % mod;
-            for (int i = 1; i < n; i++) {
-                dp[i][idx] = psum;
-                psum = (psum + dp[i][idx+1])%mod;
-            }
-            forw = false;
+    vector<int> p(n+1, 0);
+    if (v1 > v2) {
+        p[1] = v1; 
+        srch = 2;
+    } else {
+        p[2] = v2;
+        srch = 1;
+    }
+    //largest known value is srch
+    for (int i = 1; i <= n; i++) {
+        if (p[i] != 0 || i == srch) continue;
+        cout << "? " << srch << " " << i << endl;
+        cout.flush();
+        cin >> v1;
+        cout << "? " << i << " " << srch << endl;
+        cout.flush();
+        cin >> v2;
+        if (v1 > v2) {
+            p[srch] = v1;
+            srch = i;
         } else {
-            int psum = dp[n-1][idx+1] % mod;
-            for (int i = n-2; i >= 0; i--) {
-                dp[i][idx] = psum;
-                psum = (psum +  dp[i][idx+1]) % mod;
-            }
-            forw = true;
+            p[i] = v2;
         }
-        idx--;
+    }
+    for (int i = 1; i <=n; i++) {
+        if (p[i] == 0) {
+            p[i] = n;
+        }
     }
 
-    int res = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 1; j <= k; j++) {
-            res += dp[i][j];
-            res %= mod;
-        }
+    cout << "! ";
+    for (int i = 1; i <= n; i++) {
+        cout << p[i] << " ";
     }
-    cout << res+(k!=1) << endl;
+    cout << endl;
+    
 
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    while(t--) solve();
+    solve();
     
     return 0;
 

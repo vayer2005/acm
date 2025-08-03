@@ -139,51 +139,47 @@ bool lex(string a, string b) {
 }
 
 
+
 void solve() {
+    int n, k;
+    cin >> n >> k;
 
-    int n, k; cin >> n >> k;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++ ){
+        cin >> a[i];
+    }
 
-    int dp[n][k+1];
+    sort(a.begin(), a.end());
+    reverse(a.begin(), a.end());
 
-    memset(dp, 0, sizeof(dp));
-
-    dp[0][k] = 1;
-
-    int idx = k-1;
-    bool forw = true;
-    while (idx >= 1) {
-        if (forw) {
-            int psum = dp[0][idx+1] % mod;
-            for (int i = 1; i < n; i++) {
-                dp[i][idx] = psum;
-                psum = (psum + dp[i][idx+1])%mod;
-            }
-            forw = false;
+    int used = 0;
+    int l = 0; int r = 0;
+    int sol = 1;
+    while (l < n) {
+        if (used == k) break;
+        while (r < n && a[r] == a[l]) {
+            r++;
+        }
+        r--;
+        int ad = r-l+1;
+        if (used + ad <= k) {
+            used += ad;
         } else {
-            int psum = dp[n-1][idx+1] % mod;
-            for (int i = n-2; i >= 0; i--) {
-                dp[i][idx] = psum;
-                psum = (psum +  dp[i][idx+1]) % mod;
-            }
-            forw = true;
+            int d = k - used;
+            sol = C(ad, d);
+            used += d;
         }
-        idx--;
+        l = r+1;
+        r = l;
     }
 
-    int res = 0;
-    for (int i = 0; i < n; i++) {
-        for (int j = 1; j <= k; j++) {
-            res += dp[i][j];
-            res %= mod;
-        }
-    }
-    cout << res+(k!=1) << endl;
-
+    cout << sol << endl;
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
+    initFactorial();
     int t;cin >> t;
     while(t--) solve();
     

@@ -16,7 +16,7 @@ using vvi = vector<vector<int>>;
 #define ss second
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
-const int mod = 1e9+7;
+const int mod = 998244353;
 const int NUM = 1000030;
 const int N = 2e5+5;
 const double EPS = 1e-9;
@@ -127,65 +127,43 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-bool lex(string a, string b) {
-    for (int i = 0; i < a.size(); i++) {
-        if (a[i] < b[i]) {
-            return true;
-        } else if(b[i] < a[i]) {
-            return false;
-        } 
-    }
-    return false;
-}
-
 
 void solve() {
+    int n, m;
+    cin >> n >> m;
 
-    int n, k; cin >> n >> k;
+    vi a(n);
+    vi b(m);
+    
 
-    int dp[n][k+1];
-
-    memset(dp, 0, sizeof(dp));
-
-    dp[0][k] = 1;
-
-    int idx = k-1;
-    bool forw = true;
-    while (idx >= 1) {
-        if (forw) {
-            int psum = dp[0][idx+1] % mod;
-            for (int i = 1; i < n; i++) {
-                dp[i][idx] = psum;
-                psum = (psum + dp[i][idx+1])%mod;
-            }
-            forw = false;
-        } else {
-            int psum = dp[n-1][idx+1] % mod;
-            for (int i = n-2; i >= 0; i--) {
-                dp[i][idx] = psum;
-                psum = (psum +  dp[i][idx+1]) % mod;
-            }
-            forw = true;
-        }
-        idx--;
-    }
-
-    int res = 0;
     for (int i = 0; i < n; i++) {
-        for (int j = 1; j <= k; j++) {
-            res += dp[i][j];
-            res %= mod;
-        }
+        cin >> a[i];
     }
-    cout << res+(k!=1) << endl;
+    for (int i = 0; i < m; i++) {
+        cin >> b[i];
+    }
+    sort(a.begin(), a.end());
+    int diffg = 0;
+    int mn = a[0];
+    for (int i = 1; i < n; i++) {
+        diffg = gcd(diffg, a[i]- a[i-1]);
+    }
+
+
+    for (int i = 0; i < m; i++) {
+        int c = gcd(diffg, mn + b[i]);
+        cout << c << " ";
+    }
+    cout << endl;
+
+    
 
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    while(t--) solve();
+    solve();
     
     return 0;
 
