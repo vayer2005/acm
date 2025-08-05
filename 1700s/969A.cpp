@@ -127,41 +127,82 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+string s;
+vector<int> adj[200001];
+int zl = 0;
+int ol = 0;
+int unk = 0;
+int fnd = 0;
+
+int dfs(int v, int p) {
+    int ch = 0;
+    for (int x : adj[v]) {
+        if (x != p) {
+            ch += dfs(x, v);
+        }
+    }
+    if (ch == 0) {
+        zl += (s[v] == '0');
+        ol += (s[v] == '1');
+        unk += (s[v] == '?');
+    } else {
+        if (s[v] == '?') {
+            fnd += 1;
+        }
+    }
+    return ch + 1;
+}
 
 void solve() {
-    int n, m;
-    cin >> n >> m;
-
-    vi a(n);
-    vi b(m);
-    
-
+    int n; cin >> n;
+    fnd= 0;
+    ol = 0;
+    zl = 0;
+    unk = 0;
+    s="";
     for (int i = 0; i < n; i++) {
-        cin >> a[i];
+        adj[i].clear();
     }
-    for (int i = 0; i < m; i++) {
-        cin >> b[i];
+    int u, v;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        u--; v--;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
-    sort(a.begin(), a.end());
-    int diffg = 0;
-    int mn = a[0];
-    for (int i = 1; i < n; i++) {
-        diffg = gcd(diffg, a[i]- a[i-1]);
+
+    cin >> s;
+
+    dfs(0, -1);
+
+    if (s[0] == '?') {
+        int alr = 0;
+        if (ol == zl && fnd%2 == 0) {
+            alr = ol + (unk + 1)/2;
+        } else alr = max(ol, zl) + unk/2;
+
+        cout << alr << endl;
+        return;
+    } else {
+        int alr = 0;
+        if (s[0] == '1') {
+            alr = zl;
+        } else {
+            alr = ol;
+        }
+        alr += (unk+1)/2;
+        cout << alr << endl;
     }
 
 
-    for (int i = 0; i < m; i++) {
-        int c = gcd(diffg, mn + b[i]);
-        cout << c << " ";
-    }
-    cout << endl;
 
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    solve();
+    int t;cin >> t;
+    while (t--) solve();
     
     return 0;
 

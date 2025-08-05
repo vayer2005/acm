@@ -24,8 +24,8 @@ const int INF = 1e9 + 13;
  
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
  
-
-
+ 
+ 
 vector<int> lp, sieve;
 vector<int> pr;
 vector<int> power;
@@ -127,42 +127,48 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<int> adj[200001];
+vi paths;
 
-void solve() {
-    int n, m;
-    cin >> n >> m;
-
-    vi a(n);
-    vi b(m);
+int dfs(int v, int p, int len) {
     
-
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
+    int child = 0;
+    for (int x : adj[v]) {
+        if (x != p) {
+            child += dfs(x, v, len+1);
+        }
     }
-    for (int i = 0; i < m; i++) {
-        cin >> b[i];
-    }
-    sort(a.begin(), a.end());
-    int diffg = 0;
-    int mn = a[0];
-    for (int i = 1; i < n; i++) {
-        diffg = gcd(diffg, a[i]- a[i-1]);
-    }
-
-
-    for (int i = 0; i < m; i++) {
-        int c = gcd(diffg, mn + b[i]);
-        cout << c << " ";
-    }
-    cout << endl;
-
+    paths.pb(len - child);
+    return 1 + child;
 }
+ 
+ 
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    int u, v;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
 
+    dfs(1, -1, 0);
+    sort(paths.begin(), paths.end());
+    reverse(paths.begin(), paths.end());
+    int res = 0;
+    for (int i = 0; i < k; i++) {
+        res += paths[i];
+    }
+    cout << res << endl;
+    
+}
+ 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     solve();
     
     return 0;
-
+ 
 }

@@ -24,8 +24,8 @@ const int INF = 1e9 + 13;
  
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
  
-
-
+ 
+ 
 vector<int> lp, sieve;
 vector<int> pr;
 vector<int> power;
@@ -126,43 +126,61 @@ int C(int n, int k)
     int p2 = (1 * inversemod(fact[n - k], mod)) % mod;
     return (p1 * p2) % mod;
 }
-
-
+ 
+ 
 void solve() {
-    int n, m;
-    cin >> n >> m;
-
-    vi a(n);
-    vi b(m);
     
-
+    int n, k, z;
+    cin >> n >> k >> z;
+ 
+    int a[n];
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    for (int i = 0; i < m; i++) {
-        cin >> b[i];
-    }
-    sort(a.begin(), a.end());
-    int diffg = 0;
-    int mn = a[0];
+ 
+    int l = 1; int r = k;
+    int pref[n];
+    pref[0] = a[0];
     for (int i = 1; i < n; i++) {
-        diffg = gcd(diffg, a[i]- a[i-1]);
+        pref[i] = pref[i-1] + a[i];
     }
+    int maxscore = pref[k];
+ 
+    while (l < k) {
+        bool back = true;
+        int bm = 0;
+        int curr = pref[l];
+        int used = l;
+        while (bm < z && used < k) {
+            if (back) {
+                curr += a[l-1];
+                back = false;
+            } else {
+                curr += a[l];
+                bm++;
+                back = true;
+            }
+            used++;
+            maxscore = max(maxscore, curr);
+        }
+        int left = k-used;
+        curr += pref[l+left] - pref[l];
+        maxscore = max(maxscore, curr);
 
-
-    for (int i = 0; i < m; i++) {
-        int c = gcd(diffg, mn + b[i]);
-        cout << c << " ";
+        l++;
+        
     }
-    cout << endl;
-
+ 
+    cout << maxscore << endl;
+ 
 }
-
+ 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    solve();
+    int t; cin >> t;
+    while (t--) solve();
     
     return 0;
-
+ 
 }
