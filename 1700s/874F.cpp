@@ -16,7 +16,7 @@ using vvi = vector<vector<int>>;
 #define ss second
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
-const int mod = 998244353;
+const int mod = 1e9+7;
 const int NUM = 1000030;
 const int N = 2e5+5;
 const double EPS = 1e-9;
@@ -24,12 +24,13 @@ const int INF = 1e9 + 13;
  
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
  
-
-
+ 
+ 
 vector<int> lp, sieve;
 vector<int> pr;
 vector<int> power;
 vector<int> fact(2e5 + 5, 0);
+
 void initpow(int x)
 {
     power.resize(NUM);
@@ -48,6 +49,7 @@ void initFactorial()
         fact[i] = (fact[i - 1] * i) % mod;
     }
 }
+
 void calc_sieve()
 {
     sieve.resize(NUM + 1, 0);
@@ -118,7 +120,6 @@ int divmod(int a, int b, int c)
 {
     return ((a % c) * inversemod(b, c)) % c;
 }
-
 int C(int n, int k)
 {
     if (k > n)
@@ -129,53 +130,62 @@ int C(int n, int k)
 }
 
 
+ 
+ 
 void solve() {
+    int n, m;
+    cin >> n >> m;
+    vector<int> arr(n);
+    for(int i = 0; i<n; i++){
+        cin >> arr[i];
+    }
+    map<int, int> map;
+    for(int i = 0; i<n; i++){
+        map[arr[i]]++;
+    }
+    vector<int> nums;
+    for(auto p : map){
+        nums.pb(p.first);
+    }
+    sort(all(nums));
+    n = nums.size();
+    
+    if (n < m) {
+        cout << 0 << endl;
+        return;
+    }
+    
+    int ans = 0;
+    int mul = 1;
 
-    int n;
-    cin >> n;
-    int a[n+1];
-    int b[n+1];
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i] >> b[i];
+    for(int i = 0; i<m-1 && i<n; i++){
+        mul *= map[nums[i]];
+        mul %= mod;
     }
 
-    int l = 0;
-    int r = n;
-    int best = 0;
-
-    while (l <=r) {
-        int m = (l+r)/2;
-
-        int in = 0;
-        int needed = m-1;
-        for (int i = 1; i <= n; i++) {
-            if (a[i] >= needed && b[i] >= in) {
-                in++;
-                needed--;
-            }
+    for(int i = m-1; i<n; i++){ 
+        mul *= map[nums[i]];
+        mul %= mod;
+        
+        if (i >= m-1 && nums[i] - nums[i-m+1] == m-1){
+            ans += mul;
+            ans %= mod;
         }
-
-        if (in >= m) {
-            best = max(best, m);
-            l = m+1;
-        } else {
-            r = m-1;
+        
+        int leavingIdx = i - m + 1;
+        if (leavingIdx >= 0 && leavingIdx < n) {
+            mul = divmod(mul, map[nums[leavingIdx]], mod);
         }
-    } 
-
-    cout << best << endl;
-
+    }
+    cout << ans << endl;
 }
-
+ 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-
-    int t;
-    cin >> t;
-
+    int t;cin >> t;
     while (t--) solve();
     
     return 0;
-
+ 
 }

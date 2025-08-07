@@ -16,7 +16,7 @@ using vvi = vector<vector<int>>;
 #define ss second
 #define all(x) x.begin(), x.end()
 #define sz(x) (int)(x).size()
-const int mod = 998244353;
+const int mod = 1e9+7;
 const int NUM = 1000030;
 const int N = 2e5+5;
 const double EPS = 1e-9;
@@ -24,12 +24,13 @@ const int INF = 1e9 + 13;
  
 typedef __gnu_pbds::tree<int, __gnu_pbds::null_type, less<int>, __gnu_pbds::rb_tree_tag, __gnu_pbds::tree_order_statistics_node_update> ordered_set;
  
-
-
+ 
+ 
 vector<int> lp, sieve;
 vector<int> pr;
 vector<int> power;
 vector<int> fact(2e5 + 5, 0);
+
 void initpow(int x)
 {
     power.resize(NUM);
@@ -48,6 +49,7 @@ void initFactorial()
         fact[i] = (fact[i - 1] * i) % mod;
     }
 }
+
 void calc_sieve()
 {
     sieve.resize(NUM + 1, 0);
@@ -118,7 +120,6 @@ int divmod(int a, int b, int c)
 {
     return ((a % c) * inversemod(b, c)) % c;
 }
-
 int C(int n, int k)
 {
     if (k > n)
@@ -129,53 +130,24 @@ int C(int n, int k)
 }
 
 
+ 
+ 
 void solve() {
-
     int n;
     cin >> n;
-    int a[n+1];
-    int b[n+1];
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i] >> b[i];
-    }
 
-    int l = 0;
-    int r = n;
-    int best = 0;
+    
 
-    while (l <=r) {
-        int m = (l+r)/2;
-
-        int in = 0;
-        int needed = m-1;
-        for (int i = 1; i <= n; i++) {
-            if (a[i] >= needed && b[i] >= in) {
-                in++;
-                needed--;
-            }
-        }
-
-        if (in >= m) {
-            best = max(best, m);
-            l = m+1;
-        } else {
-            r = m-1;
-        }
-    } 
-
-    cout << best << endl;
 
 }
 
+ 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-
-    int t;
-    cin >> t;
-
+    int t;cin >> t;
     while (t--) solve();
     
     return 0;
-
+ 
 }

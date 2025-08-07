@@ -118,7 +118,6 @@ int divmod(int a, int b, int c)
 {
     return ((a % c) * inversemod(b, c)) % c;
 }
-
 int C(int n, int k)
 {
     if (k > n)
@@ -128,54 +127,3 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-
-void solve() {
-
-    int n;
-    cin >> n;
-    int a[n+1];
-    int b[n+1];
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i] >> b[i];
-    }
-
-    int l = 0;
-    int r = n;
-    int best = 0;
-
-    while (l <=r) {
-        int m = (l+r)/2;
-
-        int in = 0;
-        int needed = m-1;
-        for (int i = 1; i <= n; i++) {
-            if (a[i] >= needed && b[i] >= in) {
-                in++;
-                needed--;
-            }
-        }
-
-        if (in >= m) {
-            best = max(best, m);
-            l = m+1;
-        } else {
-            r = m-1;
-        }
-    } 
-
-    cout << best << endl;
-
-}
-
-signed main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-
-    int t;
-    cin >> t;
-
-    while (t--) solve();
-    
-    return 0;
-
-}

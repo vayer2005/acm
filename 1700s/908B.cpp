@@ -118,7 +118,6 @@ int divmod(int a, int b, int c)
 {
     return ((a % c) * inversemod(b, c)) % c;
 }
-
 int C(int n, int k)
 {
     if (k > n)
@@ -130,52 +129,50 @@ int C(int n, int k)
 
 
 void solve() {
+    int n, m;
+    cin >> n >> m;
 
-    int n;
-    cin >> n;
-    int a[n+1];
-    int b[n+1];
-    for (int i = 1; i <= n; i++) {
-        cin >> a[i] >> b[i];
+    vi a(n);
+    vi b(m);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
     }
 
-    int l = 0;
-    int r = n;
-    int best = 0;
+    for (int i = 0; i < m; i++) {
+        cin >> b[i];
+    }
 
-    while (l <=r) {
-        int m = (l+r)/2;
+    vi res;
 
-        int in = 0;
-        int needed = m-1;
-        for (int i = 1; i <= n; i++) {
-            if (a[i] >= needed && b[i] >= in) {
-                in++;
-                needed--;
-            }
+    sort(b.begin(), b.end());
+    reverse(b.begin(), b.end());
+    int bi = 0;
+    for (int i = 0; i < n; i++) {
+        int curr = a[i];
+        while (bi < m && b[bi] > a[i]) {
+            res.pb(b[bi]);
+            bi++;
         }
+        res.pb(a[i]);
+    }
 
-        if (in >= m) {
-            best = max(best, m);
-            l = m+1;
-        } else {
-            r = m-1;
-        }
-    } 
+    for (int i = bi; i < m; i++) {
+        res.pb(b[i]);
+    }
 
-    cout << best << endl;
-
+    for (int x : res) {
+        cout << x << " ";
+    }
+    cout << endl;
 }
 
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-
-    int t;
-    cin >> t;
-
+    int t;cin >> t;
     while (t--) solve();
     
     return 0;
 
 }
+
