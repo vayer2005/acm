@@ -129,80 +129,50 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
-
-vvi factor;
  
 void solve() {
-    int n, m;
-    cin >> n >> m;
+    int n, m; cin >> n >> m;
 
-   
-    int a[n];
-    for (int i = 0; i < n; i++) {
+    vi a(n+2, 0);
+    for (int i = 1; i <= n; i++) {
         cin >> a[i];
     }
-    sort(a, a+n);
 
-
-    vi occur(m+1, 0);
-    int reached = 0;
-
-    int l = 0; int r = 0;
-    int bst = 1e9;
-    while (l < n && r < n) {
-        while (r < n && reached != m) {
-            for (int x : factor[a[r]]) {
-                if (x <= m) {
-                    occur[x]++;
-                    if (occur[x] == 1) reached++;
-                }
-            }
-            r++;
+    int tot= 0;
+    for (int i = 1; i <= n;i++) {
+        if (a[i] != a[i+1]) {
+            tot += (i) * (n-i);
         }
-        r--;
-        if (reached) {
-            while (l <= r & reached == m) {
-                bst = min(bst, a[r] - a[l]);
-                for (int x : factor[a[l]]) {
-                    if (x <= m) {
-                        occur[x]--;
-                        if (occur[x] == 0) reached--;
-                    }
-                }
-                l++;
-            }
-            if (l > r) r = l;
-            else r++;
-        } else break;
     }
-    if (bst == 1e9) {
-        cout << "-1\n";
-        return;
+   
+    int i, x;
+    while (m--) {
+        cin >> i >> x;
+        if (a[i] != a[i+1]) {
+            tot -= (i) * (n-i);
+        }
+        if (a[i] != a[i-1]) {
+            tot -= (i-1) * (n-i+1);
+        }
+        a[i] = x;
+        if (a[i] != a[i+1]) {
+            tot += (i) * (n-i);
+        }
+        if (a[i] != a[i-1]) {
+            tot += (i-1) * (n-i+1);
+        }
+
+        cout << tot + ((n) * (n+1))/2 << endl;
+        
     }
-    cout << bst << endl;
+
 
 }
-
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    factor.pb({}); 
-    for (int i = 1; i < 1e5+1; i++) {
-        vi toadd;
-        for (int j = 1; j * j <= i; j++) {
-            if (i % j == 0) {
-                toadd.pb(j);
-                if (i/j != j) toadd.pb(i/j);
-            }
-        }
-        sort(toadd.begin(), toadd.end());
-        factor.pb(toadd);
-    }
-
-    
-    while (t--) solve();
+    solve();
     
     return 0;
  

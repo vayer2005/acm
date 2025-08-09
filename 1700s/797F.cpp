@@ -129,79 +129,69 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<int> vis(201, 0);
+int a[201];
 
-vvi factor;
- 
-void solve() {
-    int n, m;
-    cin >> n >> m;
-
-   
-    int a[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    sort(a, a+n);
-
-
-    vi occur(m+1, 0);
-    int reached = 0;
-
-    int l = 0; int r = 0;
-    int bst = 1e9;
-    while (l < n && r < n) {
-        while (r < n && reached != m) {
-            for (int x : factor[a[r]]) {
-                if (x <= m) {
-                    occur[x]++;
-                    if (occur[x] == 1) reached++;
-                }
-            }
-            r++;
-        }
-        r--;
-        if (reached) {
-            while (l <= r & reached == m) {
-                bst = min(bst, a[r] - a[l]);
-                for (int x : factor[a[l]]) {
-                    if (x <= m) {
-                        occur[x]--;
-                        if (occur[x] == 0) reached--;
-                    }
-                }
-                l++;
-            }
-            if (l > r) r = l;
-            else r++;
-        } else break;
-    }
-    if (bst == 1e9) {
-        cout << "-1\n";
+void dfs(int v, vector<int> &cyc) {
+    if (vis[v]) {
         return;
     }
-    cout << bst << endl;
-
+    cyc.pb(v);
+    vis[v] = 1;
+    dfs(a[v], cyc);
 }
 
+
+ 
+void solve() {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    s = "x" + s;
+    for (int i = 1; i <= n; i++) {
+        vis[i] = 0;
+    }
+
+    for (int i = 1; i <= n; i++ ){
+        cin >> a[i];
+    }
+
+    int l = 1;
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            vector<int> cyc;
+            dfs(i, cyc);
+            
+            string begin = s;
+            string curr = begin;
+            int per = 0;
+            int fn = cyc.size();
+            
+            while (per < cyc.size()) {
+                if (begin == curr && per != 0) {
+                    fn = per;
+                    break;
+                }
+                string tmp = curr;
+                for (int j = 0; j < cyc.size(); j++) {
+                    tmp[cyc[j]] = curr[cyc[((j+1)%cyc.size())]];
+                }
+                per++;
+                curr = tmp;
+            }
+            l = lcm(l, fn);
+        }
+    }
+
+    cout << l << endl;
+}
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    factor.pb({}); 
-    for (int i = 1; i < 1e5+1; i++) {
-        vi toadd;
-        for (int j = 1; j * j <= i; j++) {
-            if (i % j == 0) {
-                toadd.pb(j);
-                if (i/j != j) toadd.pb(i/j);
-            }
-        }
-        sort(toadd.begin(), toadd.end());
-        factor.pb(toadd);
-    }
-
-    
+    int t;
+    cin >> t;
     while (t--) solve();
     
     return 0;

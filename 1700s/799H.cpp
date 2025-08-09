@@ -130,78 +130,57 @@ int C(int n, int k)
 }
 
 
-vvi factor;
  
 void solve() {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-   
     int a[n];
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    sort(a, a+n);
 
-
-    vi occur(m+1, 0);
-    int reached = 0;
-
-    int l = 0; int r = 0;
-    int bst = 1e9;
-    while (l < n && r < n) {
-        while (r < n && reached != m) {
-            for (int x : factor[a[r]]) {
-                if (x <= m) {
-                    occur[x]++;
-                    if (occur[x] == 1) reached++;
-                }
-            }
-            r++;
+    int dp[n];
+    map<int,int> last;
+    for (int i = 0; i < n; i++) {
+        int curr = a[i];
+        if (last.find(a[i]) != last.end()) {
+            int ind = last[a[i]];
+            int rem = i - ind-1;
+            dp[i] = max(1LL, dp[ind] - rem + 1);
+        } else {
+            dp[i] = 1;
         }
-        r--;
-        if (reached) {
-            while (l <= r & reached == m) {
-                bst = min(bst, a[r] - a[l]);
-                for (int x : factor[a[l]]) {
-                    if (x <= m) {
-                        occur[x]--;
-                        if (occur[x] == 0) reached--;
-                    }
-                }
-                l++;
-            }
-            if (l > r) r = l;
-            else r++;
-        } else break;
+        last[a[i]] = i;
     }
-    if (bst == 1e9) {
-        cout << "-1\n";
-        return;
-    }
-    cout << bst << endl;
 
+    int score = 0;
+    int vl; int lst;
+    for (int i = 0; i < n; i++) {
+        if (dp[i] > score) {
+            vl = a[i];
+            lst = i;
+            score = dp[i];
+        }
+    }
+
+    int r = lst;
+    int tmp = 0;
+    int l;
+    for (int i = r; i >= 0; i--) {
+        if (a[i] == vl) tmp++;
+        else tmp--;
+        if (tmp == score) {l = i; break;}
+    } 
+
+    cout << vl << " " << l+1 << " " << r+1 << endl;
 }
-
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    factor.pb({}); 
-    for (int i = 1; i < 1e5+1; i++) {
-        vi toadd;
-        for (int j = 1; j * j <= i; j++) {
-            if (i % j == 0) {
-                toadd.pb(j);
-                if (i/j != j) toadd.pb(i/j);
-            }
-        }
-        sort(toadd.begin(), toadd.end());
-        factor.pb(toadd);
-    }
-
-    
+    int t;
+    cin >> t;
     while (t--) solve();
     
     return 0;

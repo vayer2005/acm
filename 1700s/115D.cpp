@@ -130,79 +130,19 @@ int C(int n, int k)
 }
 
 
-vvi factor;
+
  
 void solve() {
-    int n, m;
-    cin >> n >> m;
-
-   
-    int a[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
-    sort(a, a+n);
-
-
-    vi occur(m+1, 0);
-    int reached = 0;
-
-    int l = 0; int r = 0;
-    int bst = 1e9;
-    while (l < n && r < n) {
-        while (r < n && reached != m) {
-            for (int x : factor[a[r]]) {
-                if (x <= m) {
-                    occur[x]++;
-                    if (occur[x] == 1) reached++;
-                }
-            }
-            r++;
-        }
-        r--;
-        if (reached) {
-            while (l <= r & reached == m) {
-                bst = min(bst, a[r] - a[l]);
-                for (int x : factor[a[l]]) {
-                    if (x <= m) {
-                        occur[x]--;
-                        if (occur[x] == 0) reached--;
-                    }
-                }
-                l++;
-            }
-            if (l > r) r = l;
-            else r++;
-        } else break;
-    }
-    if (bst == 1e9) {
-        cout << "-1\n";
-        return;
-    }
-    cout << bst << endl;
-
+    int n;
+    cin >> n;
+    
 }
-
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t;cin >> t;
-    factor.pb({}); 
-    for (int i = 1; i < 1e5+1; i++) {
-        vi toadd;
-        for (int j = 1; j * j <= i; j++) {
-            if (i % j == 0) {
-                toadd.pb(j);
-                if (i/j != j) toadd.pb(i/j);
-            }
-        }
-        sort(toadd.begin(), toadd.end());
-        factor.pb(toadd);
-    }
-
-    
-    while (t--) solve();
+    int t; cin >> t;
+    while(t--) solve();
     
     return 0;
  

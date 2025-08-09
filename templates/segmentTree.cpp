@@ -1,8 +1,33 @@
 // T is the type of input array elements
 // V is the type of required aggregate statistic
 //source: https://gist.github.com/kartikkukreja/2e7685e1fc8dbca0001b
+// TO use : SegmentTree<int, int> st(vector.data(), n);
+// -------------------------
+// Basic node for sum segment tree.
+// Modify this struct to implement other statistics (min/max/gcd/etc.)
+// -------------------------
+struct SegmentTreeNode {
+    // 1. Per-node state
+    long long sum = 0;                 // example: store segment sum
 
-struct SegmentTreeNode;   // forward declaration so the template can refer to it
+    // 2. Build leaf from single array element
+    template<typename T>
+    void assignLeaf(const T &value) {
+        sum = value;
+    }
+
+    // 3. Merge two children
+    void merge(const SegmentTreeNode &left, const SegmentTreeNode &right) {
+        sum = left.sum + right.sum;
+    }
+
+    // 4. Return the statistic represented by this node
+    long long getValue() const {
+        return sum;
+    }
+};
+
+
 
 template<class T, class V>
 class SegmentTree {
@@ -79,30 +104,5 @@ public:
     
     nodes[stIndex].merge(nodes[left], nodes[right]);
   }
-};
-
-// -------------------------
-// Basic node for sum segment tree.
-// Modify this struct to implement other statistics (min/max/gcd/etc.)
-// -------------------------
-struct SegmentTreeNode {
-    // 1. Per-node state
-    long long sum = 0;                 // example: store segment sum
-
-    // 2. Build leaf from single array element
-    template<typename T>
-    void assignLeaf(const T &value) {
-        sum = value;
-    }
-
-    // 3. Merge two children
-    void merge(const SegmentTreeNode &left, const SegmentTreeNode &right) {
-        sum = left.sum + right.sum;
-    }
-
-    // 4. Return the statistic represented by this node
-    long long getValue() const {
-        return sum;
-    }
 };
 

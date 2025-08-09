@@ -129,58 +129,60 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<pair<int,int>> adj[100001];
+int n, a, b;
+set<int> bpref;
 
-vvi factor;
+void dfs(int v, int p, int y) {
+    if (!(v == b && p == -1)) {
+        bpref.insert(y);
+    }
+
+    for (auto x : adj[v]) {
+        if (x.first != p) {
+            dfs(x.first, v, y ^ x.second);
+        }
+    }
+
+}
+
+bool dfs2(int v, int p, int y) {
+    if (v == b) return (y == 0);
+    if (bpref.find(y) != bpref.end()){
+        return true;
+    }
+    bool res = false;
+    for (auto x : adj[v]) {
+        if (x.first != p) {
+            res |= dfs2(x.first, v, x.second ^ y);
+        }
+    }
+    return res;
+}
  
 void solve() {
-    int n, m;
-    cin >> n >> m;
-
-   
-    int a[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
+    
+    cin >> n >> a >> b;
+    for (int i = 1; i <= n; i++) {
+        adj[i].clear();
     }
-    sort(a, a+n);
+    bpref.clear();
 
-
-    vi occur(m+1, 0);
-    int reached = 0;
-
-    int l = 0; int r = 0;
-    int bst = 1e9;
-    while (l < n && r < n) {
-        while (r < n && reached != m) {
-            for (int x : factor[a[r]]) {
-                if (x <= m) {
-                    occur[x]++;
-                    if (occur[x] == 1) reached++;
-                }
-            }
-            r++;
-        }
-        r--;
-        if (reached) {
-            while (l <= r & reached == m) {
-                bst = min(bst, a[r] - a[l]);
-                for (int x : factor[a[l]]) {
-                    if (x <= m) {
-                        occur[x]--;
-                        if (occur[x] == 0) reached--;
-                    }
-                }
-                l++;
-            }
-            if (l > r) r = l;
-            else r++;
-        } else break;
+    int u, v, w;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v >> w;
+        adj[u].pb({v,w});
+        adj[v].pb({u,w});
     }
-    if (bst == 1e9) {
-        cout << "-1\n";
+
+    dfs(b, -1, 0);
+    bool res = dfs2(a, -1, 0);
+    if (res) {
+        cout << "YES\n";
         return;
-    }
-    cout << bst << endl;
-
+    } 
+    cout << "NO\n";
+    
 }
 
  
@@ -188,20 +190,7 @@ signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     int t;cin >> t;
-    factor.pb({}); 
-    for (int i = 1; i < 1e5+1; i++) {
-        vi toadd;
-        for (int j = 1; j * j <= i; j++) {
-            if (i % j == 0) {
-                toadd.pb(j);
-                if (i/j != j) toadd.pb(i/j);
-            }
-        }
-        sort(toadd.begin(), toadd.end());
-        factor.pb(toadd);
-    }
 
-    
     while (t--) solve();
     
     return 0;
