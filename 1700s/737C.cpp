@@ -130,46 +130,40 @@ int C(int n, int k)
 }
 
 
-
- 
 void solve() {
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
+    int pow2n = binpow(2, n, mod);
+    int cntEven;
+    if (n & 1) cntEven = binpow(2, n - 1, mod);
+    else cntEven = (binpow(2, n - 1, mod) - 1 + mod) % mod;
 
-    vpi pairs;
-    int a, b;
-    map<int,int> occt;
-    map<int,int> occb;
-    for (int i = 0; i < n; i++) {
-        cin >> a >> b;
-        pairs.pb({a,b});
-        occt[a]++;
-        occb[b]++;
+    int tight = 1;
+    int loose = 0;
+    for (int i = 0; i < k; i++) {
+        if (n%2 == 1) {
+            int newt = (tight * (1 + cntEven))%mod;
+            int newl = (loose * pow2n) %mod;
+            tight = newt;
+            loose = newl;
+        } else {
+            int newt = (tight * (cntEven))%mod;
+            int newl = ((tight) + ((loose * pow2n)%mod))%mod;
+            tight = newt;
+            loose = newl;
+        }
     }
 
-    int sub = 0;
+    cout << (tight + loose)%mod << endl;
 
-    for (int i = 0; i < n; i++) {
-        int t = pairs[i].first;
-        int bot = pairs[i].second;
 
-        int m1 = occt[t]-1;
-        int m2 = occb[bot]-1;
-        sub += m1 * m2;
-    }
-
-    //cout << sub << endl;
-    int tot = ((n) * (n-1) * (n-2))/6;
-    tot -= sub;
-
-    cout << tot << endl;
-    
 }
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
     int t; cin >> t;
+ 
     while(t--) solve();
     
     return 0;

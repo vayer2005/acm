@@ -129,40 +129,101 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+vector<pair<int,int>> adj[200001];
+vector<int> vis(200001,0);
+vector<int> col(200001, -1);
+map<pair<int,int>,int> seen;
+int used = 0;
+int blck = 0;
+
+int dfs(int val) {
+    //cout << val << endl;
+    used++;
+    vis[val] = 1;
+    bool res = true;
+    if (col[val] == 1) {
+        blck++;
+        for (auto x : adj[val]) {
+            int nxt = x.first;
+            int say = x.second;
+            if (say == col[nxt] && col[nxt] != -1) {
+                return false;
+            }
+            if (vis[nxt] != 1) {
+                col[nxt] = !say;
+                res = res & dfs(nxt);
+                }
+        }
+    } else {
+        for (auto x : adj[val]) {
+            int nxt = x.first;
+            int say = x.second;
+            if (say == !col[nxt] && col[nxt] != -1) {
+                return false;
+            }
+            if (vis[nxt] != 1) {
+                col[nxt] = say;
+                res = res & dfs(nxt);
+                }
+            }
+    }
+    return res;
+}
 
 
- 
 void solve() {
-    int n;
-    cin >> n;
+    int n, m; cin >> n >> m;
 
-    vpi pairs;
     int a, b;
-    map<int,int> occt;
-    map<int,int> occb;
-    for (int i = 0; i < n; i++) {
-        cin >> a >> b;
-        pairs.pb({a,b});
-        occt[a]++;
-        occb[b]++;
+    string s;
+    seen.clear();
+    for (int i = 1; i <= n; i++) {
+        vis[i] = 0;
+        col[i] = -1;
+        adj[i].clear();
+    }
+    used = 0;
+    bool works = true;
+    for (int i = 0; i < m; i++) {
+        cin >> a >> b >> s;
+        int vl;
+        if (s == "imposter") vl = 1;
+        else vl = 0;
+        if (seen.find({a,b})!= seen.end()) {
+            int v = seen[{a,b}];
+            if (v != vl) {
+                works = false;
+            }
+        }
+        seen[{a,b}] = vl;
+        seen[{b,a}] = vl;
+        adj[a].pb({b, vl});
+        adj[b].pb({a, vl});
     }
 
-    int sub = 0;
-
-    for (int i = 0; i < n; i++) {
-        int t = pairs[i].first;
-        int bot = pairs[i].second;
-
-        int m1 = occt[t]-1;
-        int m2 = occb[bot]-1;
-        sub += m1 * m2;
+    if (!works) {
+        cout << "-1\n";
+        return;
+    }
+    bool res = true;
+    int tot = 0;
+    for (int i = 1; i <= n; i++) {
+        if (!vis[i]) {
+            used = 0;
+            blck = 0;
+            col[i] = 0;
+            res &= dfs(i);
+            tot += max(blck, used-blck);
+        }
     }
 
-    //cout << sub << endl;
-    int tot = ((n) * (n-1) * (n-2))/6;
-    tot -= sub;
+    if (!res) {
+        cout << "-1\n";
+        return;
+    }
 
     cout << tot << endl;
+
     
 }
  

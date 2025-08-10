@@ -129,48 +129,57 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+int ops(int val) {
+    int res = 0;
+    int v = val;
+    while (v % 2 == 0) {
+        v /= 2;
+        res++;
+    }
+    return res;
+}
 
-
- 
 void solve() {
     int n;
     cin >> n;
 
-    vpi pairs;
-    int a, b;
-    map<int,int> occt;
-    map<int,int> occb;
-    for (int i = 0; i < n; i++) {
-        cin >> a >> b;
-        pairs.pb({a,b});
-        occt[a]++;
-        occb[b]++;
-    }
-
-    int sub = 0;
+    int a[n];
+    int tsum = 0;
 
     for (int i = 0; i < n; i++) {
-        int t = pairs[i].first;
-        int bot = pairs[i].second;
-
-        int m1 = occt[t]-1;
-        int m2 = occb[bot]-1;
-        sub += m1 * m2;
+        cin >> a[i];
+        tsum += a[i];
     }
 
-    //cout << sub << endl;
-    int tot = ((n) * (n-1) * (n-2))/6;
-    tot -= sub;
+    vector<int> dp(200001,-1);
+    dp[a[0]] = 1;
+    for (int i = 1; i < n; i++) {
+        for (int j = 200000; j >=0; j--) {
+            if (dp[j] != -1) dp[j+a[i]] = 1;
+        }
+    }
+    int mn = ops(a[0]);
+    int mind = 0;
+    for (int i = 0; i < n; i++) {
+        if (ops(a[i]) < mn) {
+            mn = ops(a[i]);
+            mind = i;
+        }
+    }
 
-    cout << tot << endl;
-    
+    if (tsum % 2 != 1 && dp[tsum/2] != -1) {
+        cout << 1 << "\n" << mind+1 << endl;
+    } else {
+        cout << 0 << endl;
+    }
+
+
 }
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
-    int t; cin >> t;
-    while(t--) solve();
+    solve();
     
     return 0;
  
