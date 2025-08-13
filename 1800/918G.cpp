@@ -163,6 +163,7 @@ void solve() {
         }
         for (auto x : adj[u]){
             int v = x.first;
+            
             int weight = x.second;
 
             if (dist.find({v, newB}) == dist.end() || dist[{v, newB}] > dist[{u, minB}] + weight * newB)
