@@ -7,7 +7,7 @@ struct DSU
 	
 	struct node
 	{
-		int p; ll sum;
+		int p; int sum;
 	};
 	vector<node> dsu;
 	
@@ -56,7 +56,7 @@ struct DSU
 		return false;
 	}
 	
-	ll getstat(int u)
+	int getstat(int u)
 	{
 		return dsu[rt(u)].sum;
 	}
