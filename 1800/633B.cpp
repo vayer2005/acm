@@ -129,24 +129,76 @@ int C(int n, int k)
     return (p1 * p2) % mod;
 }
 
+int n;
+vector<int> adj[100001];
+int ans = 0;
+int mn = 1;
+vector<int> leaves(100001,0);
+
+int dfs(int v, int p) {
+    int lv = 0;
+    int tc = 0;
+    for (int x : adj[v]) {
+        if (x != p) {
+            if (leaves[x]) lv++;
+            else dfs(x,v);
+            tc++;
+        }
+    }
+    if (lv == 0) ans += tc;
+    else ans += tc-lv+1;
+    return 0;
+}
+
+int dfs2(int v, int p) {
+    int sz = -1;
+    for (int x : adj[v]) {
+        if (x != p) {
+            int tmp = dfs2(x, v);
+            if (sz != -1 && (tmp != sz)) {
+                mn = 3;
+            }
+            sz = tmp;
+        }
+    }
+    if (sz == -1) return 0;
+    return (sz+1) % 2;
+}
+
 void solve(){
-    int a, b, c, d;
-    cin >> a >> b >> c >> d;
-
-    int tot = 0;
-    for (int sm = a+b; sm <= b+c; sm++) {
-
-        int mnx = min(b, sm - b);
-        int mxx = max(a, sm - c);
-        if (mxx > mnx) continue;
-        int ways = mnx-mxx + 1;
-
-        if (sm <= c) continue;
-        int z = (min(d+1, sm) - c);    
-        tot += ways * z;
+    cin >> n;
+    mn = 1;
+    ans = 0;
+    for (int i = 1; i <= n; i++) {
+        adj[i].clear();
+        leaves[i] = 0;
+    }
+    int u, v;
+    for (int i = 0; i < n-1; i++) {
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
 
-    cout << tot << endl;
+    int strt;
+    for (int i = 1; i <= n; i++) {
+        if (adj[i].size() == 1) leaves[i] = 1;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (leaves[i] == 0) {
+            strt = i;
+            break;
+        }
+    }
+
+    
+    //cout << strt << endl;
+    dfs(strt, -1);
+    dfs2(strt, -1);
+
+    cout << mn << " " << ans << endl;
+
 
 }
  
