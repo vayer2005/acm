@@ -128,67 +128,50 @@ int C(int n, int k)
     int p2 = (1 * inversemod(fact[n - k], mod)) % mod;
     return (p1 * p2) % mod;
 }
+
+int64_t fnd(int64_t v, int64_t i, int64_t k) {
+    int64_t tot;
+    if (v % 4 == 0) {
+        tot = v;
+    } else if (v%4 == 1) {
+        tot = 1;
+    } else if (v%4 == 2) {
+        tot = v+1;
+    } else {
+        tot = 0;
+    }
+
+    if (v >= k) {
+        int64_t mx = ((v-k) >> i);
+        int64_t fn;
+        if (mx % 4 == 0) {
+            fn = mx;
+        } else if (mx%4 == 1) {
+            fn = 1;
+        } else if (mx%4 == 2) {
+            fn = mx + 1;
+        } else {
+            fn = 0;
+        }
+
+        fn = (fn << i);
+        tot ^= fn;
+
+        if (mx % 2 == 0) {
+            tot ^= k;
+        }
+    }
+    
+    
+    return tot;
+
+}
  
 void solve() {
-    int n;
-    cin >> n;
-    int l, r;
- 
-    vvi segs;
-    map<pair<int,int>, vector<int>> inds;
-    map<int, int> sol;
- 
-    for (int i = 0; i < n; i++) {
-        cin >> l >> r;
-        inds[{l,r}].pb(i);
-        segs.pb({l,r});
-    }
- 
-    for (int i = 0; i < n; i++) {
-        sol[i] = 0;
-    }
- 
-    for (int k = 0; k < 2; k++) {
-        vector<int> ord(n);
-        for (int i = 0; i < n; i++) ord[i] = i;
- 
-        sort(ord.begin(), ord.end(), [&segs](int i, int j){
-            if (segs[i][0] != segs[j][0])
-                return segs[i][0] < segs[j][0];
-            return segs[i][1] > segs[j][1];
-        });
- 
-        set<int> bounds;
-        for (int i : ord) {
-            int strt = segs[i][0];
-            int en = segs[i][1];
-            
-            auto it = bounds.lower_bound(en);
-            if (it != bounds.end()) {
-                int vl = *it;
-                sol[i] += vl - en;
-            }
-            bounds.insert(en);
-        }
- 
-        for (auto &s : segs) {
-            s[0] = -s[0];
-            s[1] = -s[1];
-            swap(s[0], s[1]);
-        }
-    }
- 
-    for (auto &it : inds) {
-        if (it.second.size() > 1) {
-            for (int i : it.second) {
-                sol[i] = 0;
-            }
-        }
-    }
- 
-    for (int i = 0; i < n; i++) {
-        cout << sol[i] << "\n";
-    }
+    int64_t l, r, i, k;
+    cin >> l >> r >> i >> k;
+
+    cout << (fnd(r, i, k) ^ fnd(l-1, i, k)) << endl;
 }
  
 signed main() {

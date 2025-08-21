@@ -130,73 +130,23 @@ int C(int n, int k)
 }
  
 void solve() {
-    int n;
-    cin >> n;
-    int l, r;
- 
-    vvi segs;
-    map<pair<int,int>, vector<int>> inds;
-    map<int, int> sol;
- 
-    for (int i = 0; i < n; i++) {
-        cin >> l >> r;
-        inds[{l,r}].pb(i);
-        segs.pb({l,r});
+    int n, q;
+    cin >> n >> q;
+
+    vector<int> a(n+1);
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
     }
- 
-    for (int i = 0; i < n; i++) {
-        sol[i] = 0;
-    }
- 
-    for (int k = 0; k < 2; k++) {
-        vector<int> ord(n);
-        for (int i = 0; i < n; i++) ord[i] = i;
- 
-        sort(ord.begin(), ord.end(), [&segs](int i, int j){
-            if (segs[i][0] != segs[j][0])
-                return segs[i][0] < segs[j][0];
-            return segs[i][1] > segs[j][1];
-        });
- 
-        set<int> bounds;
-        for (int i : ord) {
-            int strt = segs[i][0];
-            int en = segs[i][1];
-            
-            auto it = bounds.lower_bound(en);
-            if (it != bounds.end()) {
-                int vl = *it;
-                sol[i] += vl - en;
-            }
-            bounds.insert(en);
-        }
- 
-        for (auto &s : segs) {
-            s[0] = -s[0];
-            s[1] = -s[1];
-            swap(s[0], s[1]);
-        }
-    }
- 
-    for (auto &it : inds) {
-        if (it.second.size() > 1) {
-            for (int i : it.second) {
-                sol[i] = 0;
-            }
-        }
-    }
- 
-    for (int i = 0; i < n; i++) {
-        cout << sol[i] << "\n";
-    }
+
+    
 }
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
+    srand(time(0));
     int t; cin >> t; 
     while (t--) solve();
     
     return 0;
- 
 }
