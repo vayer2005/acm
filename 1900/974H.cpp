@@ -132,13 +132,39 @@ int C(int n, int k)
 void solve() {
     int n, q;
     cin >> n >> q;
-
+ 
     vector<int> a(n+1);
     for (int i = 1; i <= n; i++) {
         cin >> a[i];
     }
-
-    
+ 
+    map<int, pair<int,int>> hash_val;
+    for (int i = 1; i <= n; i++) {
+        if (hash_val.find(a[i]) == hash_val.end()) {
+            hash_val[a[i]].first = rand() % (1LL << 62);
+            hash_val[a[i]].second = rand() % (1LL << 62);
+        }
+    }
+ 
+    vector<pair<int,int>> pref(n+1);
+    for (int i = 1; i <= n; i++) {
+        pref[i].first = pref[i-1].first ^ hash_val[a[i]].first;
+        pref[i].second = pref[i-1].second ^ hash_val[a[i]].second;
+    }
+ 
+    int l, r;
+    while (q--) {
+        cin >> l >> r;
+        if ((r-l+1) % 2 == 1) {
+            cout << "NO\n";
+            continue;
+        }
+        if (pref[r] == pref[l-1]) {
+            cout << "YES\n";
+        } else {
+            cout << "NO\n";
+        }
+    }
 }
  
 signed main() {
