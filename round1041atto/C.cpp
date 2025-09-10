@@ -135,51 +135,49 @@ int divmod(int a, int b, int c)
 }
 
 void solve() {
-    int n;
-    cin >> n;
-    
+
+    int n, k;
+    cin >> n >> k;
+
+    vvi groups;
+
     int a[n];
+    int b[n];
+
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
 
-    int look = 1;
-    int ans = 0;
-
-    while (look <= n) {
-        bool fnd = false;
-        int inv = 0;
-        int norm = 0;
-        for (int i = 0; i < n; i++) {
-            if (a[i] < look) continue;
-            if (a[i] == look) {
-                fnd = true;
-                continue;
-            }
-            
-            if (!fnd) {
-                if (2*n-look < a[i]) {
-                    inv++;
-                }
-                if (look < a[i]) {
-                    norm++;
-                }
-            } else {
-                if (2*n - look > a[i]) {
-                    inv++;
-                }
-                if (look > a[i]) {
-                    norm++;
-                }
-            }
-        }
-
-        ans += min(inv, norm);
-        look++;
+    for (int i = 0; i < n; i++) {
+        cin >> b[i];
     }
 
-    cout << ans << endl;
+    int res = 0;
+    for (int i = 0; i < n; i++) {
+        res += abs(a[i] - b[i]);
+        if (a[i] > b[i]) swap(a[i], b[i]);
+        groups.pb({a[i], b[i]});
+    }
 
+    sort(groups.begin(), groups.end());
+
+    int mndiff = 1e9;
+    for (int i = 1; i < n; i++) {
+        if (groups[i][0] <= groups[i-1][1]) {
+            mndiff = 0;
+        } else {
+            mndiff = min(mndiff, groups[i][0] - groups[i-1][1]);
+        }
+    }
+
+    res += 2 * mndiff;
+
+    cout << res << endl;
+
+
+
+
+    
 }
 
 

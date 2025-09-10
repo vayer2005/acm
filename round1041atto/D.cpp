@@ -134,52 +134,72 @@ int divmod(int a, int b, int c)
     return ((a % c) * inversemod(b, c)) % c;
 }
 
+vector<int> leaf(200001, 0);
+vector<int> adj[200001];
+int nodes = 0;
+int ans = 1;
+int flag = 1;
+void dfs(int v, int p) {
+    int leafc = leaf[p];
+    for (int x : adj[v]) {
+        if (x == p) continue;
+        if (leaf[x]) leafc++;
+        else dfs(x, v);
+    }
+    if (2 < adj[v].size()-leafc) {
+        flag = 0;
+        return;
+    }
+    if (leafc >= 1) {
+        nodes++;
+        if (leafc > 1) {
+            ans = (ans * fact[leafc]) % mod;
+        }
+    }
+}
+
 void solve() {
-    int n;
-    cin >> n;
     
-    int a[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
+    int n, m;
+    cin >> n >> m;
+    nodes = 0;
+    ans = 1;
+    flag = 1;
+    for (int i = 1; i <= n; i++) {
+        leaf[i] = 0;
+        adj[i].clear();
+    }
+    int u, v;
+    for (int i = 0; i < m; i++) {
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
     }
 
-    int look = 1;
-    int ans = 0;
+    if (m != n-1) {
+        cout << "0\n";
+        return;
+    }
 
-    while (look <= n) {
-        bool fnd = false;
-        int inv = 0;
-        int norm = 0;
-        for (int i = 0; i < n; i++) {
-            if (a[i] < look) continue;
-            if (a[i] == look) {
-                fnd = true;
-                continue;
-            }
-            
-            if (!fnd) {
-                if (2*n-look < a[i]) {
-                    inv++;
-                }
-                if (look < a[i]) {
-                    norm++;
-                }
-            } else {
-                if (2*n - look > a[i]) {
-                    inv++;
-                }
-                if (look > a[i]) {
-                    norm++;
-                }
-            }
+    for (int i = 1; i <= n; i++) {
+        if (adj[i].size() == 1){
+            leaf[i] = 1;
         }
+    }
 
-        ans += min(inv, norm);
-        look++;
+    dfs(1, 0);
+    if (!flag) {
+        cout << "0\n";
+        return;
+    }
+    if (nodes > 1) {
+        ans = (ans * 4) % mod;
+    } else {
+        ans = (ans * 2) % mod;
     }
 
     cout << ans << endl;
-
+    
 }
 
 
@@ -188,6 +208,7 @@ signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
+    initFactorial();
     int t;cin >> t;
     while(t--) solve();
     

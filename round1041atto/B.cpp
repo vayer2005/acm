@@ -135,50 +135,37 @@ int divmod(int a, int b, int c)
 }
 
 void solve() {
-    int n;
-    cin >> n;
-    
-    int a[n];
-    for (int i = 0; i < n; i++) {
-        cin >> a[i];
-    }
+    int n, x;
+    cin >>  n >> x;
 
-    int look = 1;
-    int ans = 0;
+    string s1;
+    cin >> s1;
 
-    while (look <= n) {
-        bool fnd = false;
-        int inv = 0;
-        int norm = 0;
-        for (int i = 0; i < n; i++) {
-            if (a[i] < look) continue;
-            if (a[i] == look) {
-                fnd = true;
-                continue;
-            }
-            
-            if (!fnd) {
-                if (2*n-look < a[i]) {
-                    inv++;
-                }
-                if (look < a[i]) {
-                    norm++;
-                }
-            } else {
-                if (2*n - look > a[i]) {
-                    inv++;
-                }
-                if (look > a[i]) {
-                    norm++;
-                }
-            }
+    string s = "." + s1;
+
+    int right = n+1;
+    for (int i = x + 1; i <= n; i++) {
+        if (s[i] == '#') {
+            right = i;
+            break;
         }
-
-        ans += min(inv, norm);
-        look++;
+    }
+    int left = -1;
+    for (int i = x-1; i >= 0; i--) {
+        if (s[i] == '#') {
+            left = i;
+            break;
+        }
     }
 
-    cout << ans << endl;
+    if (x == 1 || x == n) {
+        cout << "1\n";
+        return;
+    }
+    int rside = (n+1)-right+1;
+    int lside = left+1;
+
+    cout << max(min(lside, n+1-x), min(rside, x)) << endl;
 
 }
 
