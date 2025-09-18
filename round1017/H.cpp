@@ -135,15 +135,73 @@ int divmod(int a, int b, int c)
 }
 
 void solve() {
-    
+    int n; int q;
+    cin >> n >> q;
 
+    vector<int> a(n,0);
+    map<int,vi> occur;
+
+    for (int i = 0; i < n ; i++) {
+        cin >> a[i];
+        occur[a[i]].pb(i);
+    }
+
+
+    int l, k, r;
+    while (q--) {
+        cin >> k >> l >> r;
+        l--;r--;
+
+        vpi facts;
+        for (int i = 1; i * i <= k; i++) {
+            if (k % i == 0) {
+                if (occur.count(i)) {
+                    auto& vec = occur[i];
+                    auto it = lower_bound(vec.begin(), vec.end(), l);
+                    if (it != vec.end() && *it <= r) {
+                        facts.push_back({*it, i});
+                    }
+                }
+                
+                if (i != k/i && occur.count(k/i)) {
+                    auto& vec = occur[k/i];
+                    auto it = lower_bound(vec.begin(), vec.end(), l);
+                    if (it != vec.end() && *it <= r) {
+                        facts.push_back({*it, k/i});
+                    }
+                }
+            }
+        }
+        
+
+        sort(facts.begin(), facts.end());
+
+
+        int curr = k;
+        int pind = l;
+        int ans = 0;
+        for (auto pr : facts) {
+            ans += curr * (pr.first - pind);
+            while (curr % pr.second == 0) {
+                curr /= pr.second;
+            }
+            pind = pr.first;
+        }
+        ans += (r - pind+1) * curr;
+
+       cout << ans << endl;
+
+    }
 }
+
+
  
 signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    solve();
+    int t;cin >> t;
+    while(t--) solve();
     
-    return 0; 
+    return 0;
 }

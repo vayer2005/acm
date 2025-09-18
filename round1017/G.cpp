@@ -135,6 +135,80 @@ int divmod(int a, int b, int c)
 }
 
 void solve() {
+    int q;cin >> q;
+
+    int curr = 0; 
+    int rev=0;
+    int sz = 0;
+    int flag = 0;
+    int prefix = 0;
+    int op; int k;
+    deque<int> dq;
+    deque<int> dqr;
+    while (q--) {
+        cin >> op;
+        if (op == 3) {
+            cin >> k;
+            if (!flag) {
+                //pushback norm
+                dq.push_back(k);
+                curr += k * (sz+1);
+                
+                dqr.push_front(k);
+                rev += prefix + k;
+                sz++;
+                cout << curr << endl;
+
+            } else {
+                dq.push_front(k);
+                curr += prefix+k;
+                
+                dqr.push_back(k);
+                rev += k * (sz+1);
+                sz++;
+                cout << rev << endl;
+            }
+            prefix += k;
+        } else if (op == 1) {
+            if (!flag) {
+                //norm shift
+                int delta = prefix - (dq.back() * (sz+1)) + dq.back();
+                int v = dq.back();
+                dq.pop_back();
+                dq.push_front(v);
+                curr += delta;
+                int delta2 = -1 * prefix + (dqr.front() * sz);
+                v = dqr.front();
+                dqr.pop_front();
+                dqr.push_back(v);
+                rev += delta2;
+                cout << curr << endl;
+            } else {
+                //opp shift
+                int delta = prefix - (dqr.back() * (sz+1)) + dqr.back();
+                int v = dqr.back();
+                dqr.pop_back();
+                dqr.push_front(v);
+                rev += delta;
+                int delta2 = -1 * prefix + (dq.front() * sz);
+                v = dq.front();
+                dq.pop_front();
+                dq.push_back(v);
+                curr += delta2;
+                cout << rev << endl;
+            }
+        } else {
+            flag = !flag;
+            if (!flag) {
+                cout << curr << endl;
+            } else {
+                cout << rev << endl;
+            }
+        }
+
+
+
+    }
     
 
 }
@@ -143,7 +217,8 @@ signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    solve();
+    int t;cin >> t;
+    while(t--) solve();
     
-    return 0; 
+    return 0;
 }

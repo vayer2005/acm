@@ -139,19 +139,41 @@ void solve() {
 
     cin >> n >> m >> k;
 
-    if (n%k != 0) {
+    if (m%k != 0) {
         int curr = 0;
-
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 cout << curr+1 << " ";
-                curr = (curr + 1) % k
+                curr = (curr + 1) % k;
             }
             cout << endl;
         }
-        cout << endl;
         return;
-    } 
+    } else {
+        //cout << "xxxx\n";
+        int curr = 0;
+        int flag = 0;
+    
+        for (int i = 0; i < n; i++) {
+            if (!flag) {
+                curr = 0;
+                for (int j = 0; j < m; j++) {
+                    cout << curr+1 << " ";
+                    curr = (curr + 1) % k;
+                }
+                flag = !flag;
+            } else {
+                curr = 1;
+                for (int j = 0; j < m; j++) {
+                    cout << curr+1 << " ";
+                    curr = (curr + 1) % k;
+                }
+                flag = !flag;
+            }
+            cout << endl;
+        } 
+        return;
+    }
 
     
 
