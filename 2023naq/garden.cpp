@@ -8,6 +8,8 @@ using namespace std;
 #define ppb pop_back
 #define mp make_pair
 #define int long long
+#define double long double
+
 using vpi = vector<pair<int, int>>;
 using pi = pair<int, int>;
 using vi = vector<int>;
@@ -35,7 +37,7 @@ vector<int> inv_fact(2e5 + 5, 0);
 
 
 void solve() {
- 
+    
 
 }
 
