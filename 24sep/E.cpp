@@ -36,7 +36,6 @@ void solve() {
     }
     
     for (int i = 0; i < n; i++) {
-        //cout << big[i] << " " << small[i] << endl;
         ans += big[i] * small[i];
     }
     
