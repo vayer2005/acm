@@ -39,7 +39,7 @@ public:
 
     // pointer array for child nodes of each node
     TrieNode* children[26];
-
+    int amt;
     // Used for indicating ending of string
     bool isLeaf;
 
@@ -51,6 +51,7 @@ public:
         for (int i = 0; i < 26; i++) {
             children[i] = nullptr;
         }
+        amt = 0;
     }
 };
 
@@ -64,48 +65,45 @@ void insert(TrieNode *root, string key)
     // Iterate across the length of the string
     for (char c : key)
     {
-
         // Check if the node exists for the
         // current character in the Trie
         if (curr->children[c - 'a'] == nullptr)
         {
-
             // If node for current character does
             // not exist then make a new node
             TrieNode *newNode = new TrieNode();
-
             // Keep the reference for the newly
             // created node
             curr->children[c - 'a'] = newNode;
         }
-
-        // Move the curr pointer to the
-        // newly created node
+        // Move the curr pointer to the newly created/existing node
         curr = curr->children[c - 'a'];
+        // Increment at the node representing this prefix
+        curr->amt++;
     }
 
     // Mark the end of the word
     curr->isLeaf = true;
 }
 
-TrieNode* search(TrieNode* root, string key) {
+int search(TrieNode* root, string key) {
 
     TrieNode* curr = root;
     for (char c : key) {
-        if (curr == nullptr) return nullptr;
-        if (curr->children[c-'a']) {
-            curr = curr->children[c-'a'];
-        }
+        int idx = c - 'a';
+        if (!curr->children[idx]) return 0;
+        curr = curr->children[idx];
     }
-    return curr;
+    return curr->amt;
 }
 
 
 class AndTrieNode {
 public:
 
-    // pointer array for child nodes of each node
-    AndTrieNode* children[676];
+    // sparse children: (edge index 0..675, child ptr) kept sorted
+    vector<pair<int, AndTrieNode*>> children;
+    int amt;
 
     // Used for indicating ending of string
     bool isLeaf;
@@ -115,14 +113,13 @@ public:
         // initialize the wordEnd variable with false
         // initialize every index of childNode array with NULL
         isLeaf = false;
-        for (int i = 0; i < 676; i++) {
-            children[i] = nullptr;
-        }
+        children.clear();
+        amt = 0;
     }
 };
 
   // Method to insert a key into the Trie
-void insert(AndTrieNode *root, string key)
+void insert(AndTrieNode *root, string key, string key2)
 {
 
     // Initialize the curr pointer with the root node
@@ -131,93 +128,41 @@ void insert(AndTrieNode *root, string key)
     // Iterate across the length of the string
     for (int i = 0; i < n; i++)
     {
-
         int frst = key[i] - 'a';
-        int sec = key[n-i-1] - 'a';
+        int sec = key2[i] - 'a';
         int idx = frst * 26 + sec;
-        // Check if the node exists for the
-        // current character in the Trie
-        if (curr->children[idx] == nullptr)
-        {
-
-            // If node for current character does
-            // not exist then make a new node
-            AndTrieNode *newNode = new AndTrieNode();
-
-            // Keep the reference for the newly
-            // created node
-            curr->children[idx] = newNode;
+        // binary search for child
+        auto it = lower_bound(curr->children.begin(), curr->children.end(), idx, [](const auto p, int idx) {return p.first < idx;});
+        if (it == curr->children.end() || it->first != idx) {
+            int pos = (int)(it - curr->children.begin());
+            curr->children.insert(it, {idx, new AndTrieNode()});
+            it = curr->children.begin() + pos;
         }
-
-        // Move the curr pointer to the
-        // newly created node
-        curr = curr->children[idx];
+        curr = it->second;
+        curr->amt++;
     }
 
     // Mark the end of the word
     curr->isLeaf = true;
 }
 
-AndTrieNode* search(AndTrieNode* root, string key) {
+int search(AndTrieNode* root, string key, string key2) {
 
     AndTrieNode *curr = root;
     int n = key.size();
-    // Iterate across the length of the string
     for (int i = 0; i < n; i++)
     {
         int frst = key[i] - 'a';
-        int sec = key[n-i-1] - 'a';
+        int sec = key2[i] - 'a';
         int idx = frst * 26 + sec;
-        if (curr->children[idx]) {
-            curr = curr->children[idx];
-        }
+        auto it = lower_bound(curr->children.begin(), curr->children.end(), idx, [](const auto p, int idx) {return p.first < idx;});
+        if (it == curr->children.end() || it->first != idx) return 0;
+        curr = it->second;
     }
 
-    return curr;
+    return curr->amt;
 }
 
-map<AndTrieNode*, int> andCnt;
-map<TrieNode*, int> normCnt;
-map<TrieNode*, int> revCnt;
-
-int dfs(TrieNode* node) {
-    int sz = 0;
-    if (node->isLeaf) sz++;
-    for (int i = 0; i < 26; i++) {
-        if (node->children[i]) {
-            sz += dfs(node->children[i]);
-        }
-    }
-
-    normCnt[node] = sz;
-    return sz;
-}
-
-int dfs2(TrieNode* node) {
-    int sz = 0;
-    if (node->isLeaf) sz++;
-    for (int i = 0; i < 26; i++) {
-        if (node->children[i]) {
-            sz += dfs2(node->children[i]);
-        }
-    }
-
-    revCnt[node] = sz;
-    return sz;
-}
-
-int dfs3(AndTrieNode* node) {
-    int sz = 0;
-    if (node->isLeaf) sz++;
-    for (int i = 0; i < 676; i++) {
-        if (node->children[i]) {
-            sz += dfs3(node->children[i]);
-        }
-    }
-
-    andCnt[node] = sz;
-    return sz;
-}
 
 void solve() {
     int n, q;
@@ -229,32 +174,27 @@ void solve() {
     string s;
     for (int i = 0; i < n; i++) {
         cin >> s;
+        string s2 = "";
+        for (int j = s.size()-1; j >= 0; j--) {
+            s2 += s[j];
+        }
         insert(root, s);
-        insert(androot, s);
-        reverse(s.begin(), s.end());
-        insert(revroot, s);
+        insert(androot, s, s2);
+        insert(revroot, s2);
     }
 
-    dfs(root);
-    dfs2(revroot);
-    dfs3(androot);
 
     string o, suf, pref;
 
     while (q--) {
-        cin >> o >> suf >> pref;
+        cin >> o >> pref >> suf;
+        string rsuf = suf;
+        reverse(rsuf.begin(), rsuf.end());
 
-        TrieNode* p1 = search(root, pref);
-        TrieNode* p2 = search(revroot, suf);
-        string r = pref + suf;
-        AndTrieNode* a1 = search(androot, r);
-        int pnum = 0;
-        int snum = 0;
-        int andnum = 0;
-        if (p1 != nullptr) pnum = normCnt[p1];
-        if (p2 != nullptr) snum = revCnt[p2];
-        if (a1 != nullptr) andnum = andCnt[a1];
-
+        int pnum = search(root, pref);
+        int snum = search(revroot, rsuf);
+        int andnum = search(androot, pref, rsuf);
+    
         if (o == "AND") {
             cout << andnum << endl;
         } else if (o == "OR") {
@@ -263,9 +203,6 @@ void solve() {
             cout << pnum + snum - 2*andnum << endl;
         }
     }
-
-    
-
 }
 
 signed main() {

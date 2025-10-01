@@ -73,7 +73,6 @@ void solve() {
     
     cin >> n >> k;
 
-    expire_days.assign(n + 2, 0);
     gain_per_day.assign(n + 2, 0);
     expiry_of_day.assign(n + 2, 0);
 
