@@ -87,7 +87,6 @@ void solve() {
     //cout << ans << endl;
     
     for (int i = 1; i < n; i++){
-        //change pmin and pmax
         moccur[a[i-1]]--;
  
         if (moccur[a[i-1]] == 0) {

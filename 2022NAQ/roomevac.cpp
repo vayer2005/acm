@@ -77,10 +77,10 @@ Dinic* dinic;
 int main() {
   int r, c, maxt;
   cin >> r >> c >> maxt;
-  {
-    string s;
-    getline(cin, s);
-  }
+  
+ string s;
+ getline(cin, s);
+  
   maxt++;
   vector<string> g(r);
   for(int i = 0; i < r; i++) getline(cin, g[i]);
@@ -98,8 +98,8 @@ int main() {
         }
       }
       if(g[i][j] != '#') {
-        int dx[5]{-1,0,1,0,0};
-        int dy[5]{0,1,0,-1,0};
+        int dx[5] = {-1,0,1,0,0};
+        int dy[5] = {0,1,0,-1,0};
         for(int x = 0; x < maxt; x++) {
           dinic->add_edge(i*c+j + 2*r*c*x, i*c+j + 2*r*c*x + r*c, 1);
           if(x+1 < maxt) {
@@ -115,7 +115,7 @@ int main() {
       }
     }
   }
-  int nump = 0;
-  for(int i = 0; i < r; i++) nump += count(g[i].begin(), g[i].end(), 'P');
+ 
+  
   cout << dinic->flow(src, snk) << "\n";
 }

@@ -185,7 +185,6 @@ void solve() {
     for (auto &x : edges) {
         int c1 = toc[x[0]];
         int c2 = toc[x[1]];
-        //cout << c1 << " " << c2 << endl;
         if (c1 == c2) continue;
         child[c2].pb(c1);
         outdeg[c1]++;
