@@ -53,10 +53,8 @@ void solve(int t) {
         double mxp = (i*1.0)/a[i];
         double mnp = (i*1.0)/b[i];
         
-
         l = max(l, mnp);
         r = min(r, mxp);
-        //cout << l << " " << r << endl;
         
         if (l > r + EPS) {
             cout << fixed << setprecision(8) << "Case #" << t+1 << ": " << -1 << endl;
@@ -78,8 +76,5 @@ signed main() {
     for (int i = 0; i < t; i++) {
         solve(i);
     }
-
-    
-    
     return 0;
 }
