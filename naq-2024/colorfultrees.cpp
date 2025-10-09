@@ -34,6 +34,10 @@ void merge(int v, int u) { // merge u into v
             cnv[v].erase(x);
         }
     }
+
+    cnv[u].clear();
+    //f[u] = 0;
+    //cnt[u] = 0;
 }
 
 void dfs(int v, int par = -1) {
