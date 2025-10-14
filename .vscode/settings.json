@@ -58,6 +58,7 @@
         "parity-cpp": "cpp",
         "fstream": "cpp",
         "unordered_set": "cpp",
-        "__memory": "cpp"
+        "__memory": "cpp",
+        "iomanip": "cpp"
     }
 }
