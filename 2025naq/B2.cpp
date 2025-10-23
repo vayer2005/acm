@@ -67,8 +67,6 @@ void solve() {
         pref[i] = pref[i-1] + a[i];
     }
 
-    
-
 
     //cout << need << endl;
     for (int i = 0; i < n; i++) {
