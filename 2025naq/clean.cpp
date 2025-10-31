@@ -47,33 +47,32 @@ static bool canClean(int s, const vector<int> &ps, const vector<unsigned char> &
 
     // Connectivity check of 'valid' grid (4-neighborhood)
     long long visited = 0;
-    vector<int> q;
-    q.reserve((long long)N * M);
+    queue<int> q;
     int start = -1;
     for (long long idx = 0; idx < (long long)N * M; idx++) {
         if (valid[idx]) { start = (int)idx; break; }
     }
     if (start == -1) return false;
 
-    q.push_back(start);
+    q.push(start);
     valid[start] = 2; // mark visited
-    for (size_t head = 0; head < q.size(); head++) {
-        int cur = q[head];
+    while (!q.empty()) {
+        int cur = q.front(); q.pop();
         int r = cur / M; // 0-based in [0..N-1]
         int c = cur % M; // 0-based in [0..M-1]
         visited++;
         // neighbors: up, down, left, right
         if (r > 0) {
-            int v = cur - M; if (valid[v] == 1) { valid[v] = 2; q.push_back(v); }
+            int v = cur - M; if (valid[v] == 1) { valid[v] = 2; q.push(v); }
         }
         if (r + 1 < N) {
-            int v = cur + M; if (valid[v] == 1) { valid[v] = 2; q.push_back(v); }
+            int v = cur + M; if (valid[v] == 1) { valid[v] = 2; q.push(v); }
         }
         if (c > 0) {
-            int v = cur - 1; if (valid[v] == 1) { valid[v] = 2; q.push_back(v); }
+            int v = cur - 1; if (valid[v] == 1) { valid[v] = 2; q.push(v); }
         }
         if (c + 1 < M) {
-            int v = cur + 1; if (valid[v] == 1) { valid[v] = 2; q.push_back(v); }
+            int v = cur + 1; if (valid[v] == 1) { valid[v] = 2; q.push(v); }
         }
     }
     if (visited != totalValid) return false; // not connected
