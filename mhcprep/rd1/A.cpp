@@ -136,9 +136,9 @@ void solve(int t) {
     int n;
     cin >> n;
 
-    int dpf[n];
-    int dpb[n];
-    int a[n];
+    vi a(n);
+    vi dpf(n);
+    vi dpb(n);
 
     for (int i = 0; i < n; i++) {
         cin >> a[i];
@@ -170,7 +170,7 @@ signed main() {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-    freopen("A2.in", "r", stdin);
+    freopen("A3.in", "r", stdin);
     freopen("A.out", "w", stdout);
 
     int t;
